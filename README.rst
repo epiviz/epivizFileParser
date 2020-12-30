@@ -3,14 +3,12 @@ parser
 ======
 
 
-Add a short description here!
-
+The parser module manages reading and querying genomic file formats.
 
 Description
 ===========
 
-A longer description of your project goes here...
-
+When querying for a given range, Results/Intervals from the file are converted into Pandas DataFrame. 
 
 Note
 ====
