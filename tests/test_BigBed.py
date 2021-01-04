@@ -3,7 +3,7 @@
 import pytest
 import os
 
-from parser.BigBed import BigBed
+from efs_parser.BigBed import BigBed
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"

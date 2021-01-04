@@ -1,8 +1,8 @@
-======
-parser
-======
+==========
+efs_parser
+==========
 
-This is the documentation of **parser**.
+This is the documentation of **efs_parser**.
 
 .. note::
 
