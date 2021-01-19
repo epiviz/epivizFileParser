@@ -22,7 +22,7 @@ def test_header():
     assert(bb.header == {'magic': 2273964779, 'version': 4, 'zoomLevels': 10, 'chromTreeOffset': 953, 'fullDataOffset': 1275, 'fullIndexOffset': 142913985, 'fieldCount': 9, 'definedFieldCount': 9, 'autoSqlOffset': 304, 'totalSummaryOffset': 849, 'uncompressBufSize': 29537})
 
 def test_columns():
-    assert(len(bb.columns) == 9)
+    assert(len(bb.columns) == bb.header['fieldCount'])
     assert(bb.columns == ['chr', 'start', 'end', 'name', 'score', 'strand', 'thickStart',
        'thickEnd', 'reserved'])
 

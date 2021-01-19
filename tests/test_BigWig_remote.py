@@ -25,7 +25,8 @@ def test_header():
     assert(bb.header == {'magic': 2291137574, 'version': 4, 'zoomLevels': 10, 'chromTreeOffset': 344, 'fullDataOffset': 705, 'fullIndexOffset': 582485344, 'fieldCount': 0, 'definedFieldCount': 0, 'autoSqlOffset': 0, 'totalSummaryOffset': 304, 'uncompressBufSize': 32768})
 
 def test_columns():
-    assert(len(bb.columns) == 4)
+    #bb.header[fieldCount]==0
+    assert(len(bb.columns) == bb.header[fieldCount])
     assert(bb.columns == ["chr", "start", "end", "score"])
 
 def test_range():
