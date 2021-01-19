@@ -14,6 +14,7 @@ __license__ = "mit"
     come from the pyBigWig library
 """
 
+#bb = BigWig("./test.bw")
 bb = BigWig("tests/test.bw")
 
 def test_header():
