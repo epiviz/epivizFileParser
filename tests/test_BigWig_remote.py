@@ -16,7 +16,8 @@ __license__ = "mit"
 
 #bb = BigWig("./test.bw")
 bb = BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
-#bb = BigWig("https://obj.umiacs.umd.edu/bigwig-files/ENCFF330GHF.bigBed")
+#bb = BigWig("./39031.bigwig")
+
 
 def test_correct_format():
     assert (bb.header['magic']==2291137574)
@@ -26,13 +27,18 @@ def test_header():
 
 def test_columns():
     #bb.header[fieldCount]==0
-    assert(len(bb.columns) == bb.header[fieldCount])
+    #assert(len(bb.columns) == bb.header['fieldCount'])
+    assert(len(bb.columns) == 4)
     assert(bb.columns == ["chr", "start", "end", "score"])
 
 def test_range():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=10020000)
+    start = 10000000
+    end = 10020000
+    res, err = bb.getRange(chr="chr1", start=start, end=end)
     assert(err == None)
     assert(len(res) == 495)
+    for i in range(0,495):
+        assert ((res['start'][i] >= start and res['start'][i] <= end) or (res['end'][i] >= start and res['end'][i] <= end))
 
 def test_zoom_out_of_range():
     bw_res_100, bw_err_100 = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=100)
@@ -40,59 +46,47 @@ def test_zoom_out_of_range():
     assert (bw_err_100 == bw_err__1)
     assert (len(bw_res_100) == len(bw_res__1))
 
-def test_zoom_minus_one():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=-1)
-    assert (err == None)
-    assert (len(res) == 2443)
+def test_zoom_levels():
+    for l in range(-1,10):
+        res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=l)
+        assert (err == None)
+        if (l == -1):
+            assert (len(res) == 2443)
+        elif (l == 0):
+            assert (len(res) == 39063)
+        elif (l == 1):
+            assert (len(res) == 9767)
+        elif (l == 2):
+            assert (len(res) == 2443)
+        if (l == 3):
+            assert (len(res) == 611)
+        elif (l == 4):
+            assert (len(res) == 153)
+        elif (l == 5):
+            assert (len(res) == 39)
+        if (l == 6):
+            assert (len(res) == 11)
+        elif (l == 7):
+            assert (len(res) == 3)
+        elif (l == 8):
+            assert (len(res) == 1)
+        if (l == 9):
+            assert (len(res) == 1)
 
+def test_get_bytes():
+    res = bb.get_bytes(1, 100)
+    assert (len(res) == 100)
 
+def test_bin_rows():
+    start = 5000000
+    end = 10020000
+    res, err = bb.getRange(chr="chr1", start=start, end=end)
+    v = bb.bin_rows(data=res, chr="chr1", start=start, end=end, columns=['score'], bins=10)
+    assert (len(v[0]) == 10)
 
-def test_zoom_0():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=0)
-    assert (err == None)
-    assert (len(res) == 39063)
-
-def test_zoom_1():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=1)
-    assert (err == None)
-    assert (len(res) == 9767)
-
-def test_zoom_2():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=2)
-    assert (err == None)
-    assert (len(res) == 2443)
-
-def test_zoom_3():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=3)
-    assert (err == None)
-    assert (len(res) == 611)
-
-def test_zoom_4():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=4)
-    assert (err == None)
-    assert (len(res) == 153)
-
-def test_zoom_5():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=5)
-    assert (err == None)
-    assert (len(res) == 39)
-
-def test_zoom_6():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=6)
-    assert (err == None)
-    assert (len(res) == 11)
-
-def test_zoom_7():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=7)
-    assert (err == None)
-    assert (len(res) == 3)
-
-def test_zoom_8():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=8)
-    assert (err == None)
-    assert (len(res) == 1)
-
-def test_zoom_9():
-    res, err = bb.getRange(chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=9)
-    assert (err == None)
-    assert (len(res) == 1)
+def test_simplified_bin_rows():
+    start = 5000000
+    end = 10020000
+    res, err = bb.getRange(chr="chr1", start=start, end=end)
+    v = bb.simplified_bin_rows(data=res, chr="chr1", start=start, end=end, columns=['score'], bins=10)
+    assert (len(v[0]) == 10)

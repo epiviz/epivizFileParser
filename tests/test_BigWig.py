@@ -15,6 +15,7 @@ __license__ = "mit"
 """
 
 #bb = BigWig("./test.bw")
+#bb = BigWig("./ENCFF685PIH.bigWig")
 bb = BigWig("tests/test.bw")
 
 def test_header():
@@ -28,3 +29,23 @@ def test_range():
     res, err = bb.getRange(chr="1", start=0, end=3)
     assert(err == None)
     assert(len(res) == 3)
+
+def test_get_bytes():
+    res = bb.get_bytes(1, 100)
+    assert (len(res) == 100)
+
+def test_bin_rows():
+    bb = BigWig("./ENCFF685PIH.bigWig")
+    start = 5000000
+    end = 10020000
+    res, err = bb.getRange(chr="chr1", start=start, end=end)
+    v = bb.bin_rows(data=res, chr="chr1", start=start, end=end, columns=['score'], bins=10)
+    assert (len(v[0]) == 10)
+
+def test_simplified_bin_rows():
+    bb = BigWig("./39031.bigWig")
+    start = 5000000
+    end = 10020000
+    res, err = bb.getRange(chr="chr1", start=start, end=end)
+    v = bb.simplified_bin_rows(data=res, chr="chr1", start=start, end=end, columns=['score'], bins=10)
+    assert (len(v[0]) == 10)
