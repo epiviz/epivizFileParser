@@ -1,7 +1,11 @@
-======
-parser
-======
+==========
+EFS Parser
+==========
 
+.. image:: https://github.com/epiviz/efs_parser/workflows/efs_parser/badge.svg
+    :alt: efs_parser
+
+![efs_parser](https://github.com/epiviz/efs_parser/workflows/efs_parser/badge.svg)
 
 The parser module manages reading and querying genomic file formats.
 
