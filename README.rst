@@ -5,6 +5,10 @@ EFS Parser
 .. image:: https://github.com/epiviz/efs_parser/workflows/efs_parser/badge.svg
     :alt: efs_parser
 
+.. image:: https://readthedocs.org/projects/efs-parser/badge/?version=latest
+    :target: https://efs-parser.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 Parse and Query Genomic File Formats
 
 Description
@@ -14,7 +18,7 @@ The results of the query are transformed into a Pandas DataFrame. This allows us
 advantage of many of the visual and analysis packages in the pandas/numpy ecosystem.
 
 `Explore the docs 
-<http://www.python.org/>`_
+<https://efs-parser.readthedocs.io>`_
 
 Developer Notes
 ===============
