@@ -73,7 +73,7 @@ def test_zoom_levels():
 def test_get_bytes():
     res = bb.get_bytes(1, 100)
     assert (len(res) == 100)
-gi
+
 def test_bin_rows():
     start = 5000000
     end = 10020000
