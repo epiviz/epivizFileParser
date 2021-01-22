@@ -5,7 +5,7 @@ import os
 
 from efs_parser.BigBed import BigBed
 
-__author__ = "jkanche"
+__author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
@@ -27,3 +27,7 @@ def test_range():
     res, err = bb.getRange(chr="chr1", start=10000000, end=10020000)
     assert(err == None)
     assert(len(res) == 3)
+
+def test_get_bytes():
+    res = bb.get_bytes(1, 100)
+    assert (len(res) == 100)
