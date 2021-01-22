@@ -1,26 +1,70 @@
-==========
-efs_parser
-==========
+==========================================
+Efs Parser - Read and Query genomic files.
+===========================================
 
-This is the documentation of **efs_parser**.
+The package providies utilties to parse and query commonly used genomic file formats. 
+Genomic files are usually indexed (BigWig, BigBed, Tabix etc) and the library will only
+read the necessary bytes of the file to query data. In addition, The library also works with
+remotely hosted files. This requires the remotely hosted file to support HTTP Byte-Range requests 
 
 .. note::
 
-    This is the main page of your project's `Sphinx`_ documentation.
-    It is formatted in `reStructuredText`_. Add additional pages
-    by creating rst-files in ``docs`` and adding them to the `toctree`_ below.
-    Use then `references`_ in order to link them from this page, e.g.
-    :ref:`authors` and :ref:`changes`.
+    - package is open source and is available on `GitHub <https://github.com/epiviz/efs_parser>`_
 
-    It is also possible to refer to the documentation of other Python packages
-    with the `Python domain syntax`_. By default you can reference the
-    documentation of `Sphinx`_, `Python`_, `NumPy`_, `SciPy`_, `matplotlib`_,
-    `Pandas`_, `Scikit-Learn`_. You can add more by extending the
-    ``intersphinx_mapping`` in your Sphinx's ``conf.py``.
 
-    The pretty useful extension `autodoc`_ is activated by default and lets
-    you include documentation from docstrings. Docstrings can be written in
-    `Google style`_ (recommended!), `NumPy style`_ and `classical style`_.
+Installation
+============
+
+Using PyPI
+=========
+
+will be on PyPI soon.. but for now install from GitHub below
+
+
+From GitHub (devel version)
+===========================
+
+To install the devel version from `GitHub
+<https://github.com/epiviz/efs_parser>`__: Install using pip
+
+.. code-block:: console
+
+    pip install git@github.com:epiviz/efs_parser.git
+
+or clone the repository and install from local directory using `pip`
+
+.. note::
+
+    Depending on how python was setup, installing packages
+    may sometime require sudo permission, in this case, add 
+    the --user option 
+
+    .. code-block:: console
+
+        pip install --user git@github.com:epiviz/efs_parser.git
+
+Usage
+=====
+
+For example, to read a BigWig file, 
+
+.. code-block:: python
+
+    from efs_parser import BigWig
+    
+    # initialize a file
+    bw = BigWig("tests/test.bw")
+
+    # extract header and zoom levels from the file
+    print(bw.header, bw.zooms)
+
+    # query the file
+    res, err = bw.getRange(chr="chr1", start=10000000, end=10020000)
+    print(res)
+
+    # summarize data into equals windows/bins
+    sres = bw.bin_rows(res, chr="chr1", start=10000000, end=10020000, columns=['score'], bins=10)
+    print(sres)
 
 
 Contents
@@ -29,6 +73,8 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   Installation <installation>
+   Usage <usage>
    License <license>
    Authors <authors>
    Changelog <changelog>

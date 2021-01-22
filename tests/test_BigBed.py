@@ -5,7 +5,7 @@ import os
 
 from efs_parser.BigBed import BigBed
 
-__author__ = "jkanche"
+__author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
@@ -15,7 +15,6 @@ __license__ = "mit"
 """
 
 bb = BigBed("tests/test.bigBed")
-#bb = BigBed("./test.bigBed")
 
 def test_header():
     assert(bb.header == {'magic': 2273964779, 'version': 4, 'zoomLevels': 0, 'chromTreeOffset': 1066, 'fullDataOffset': 1180, 'fullIndexOffset': 1781, 'fieldCount': 9, 'definedFieldCount': 6, 'autoSqlOffset': 304, 'totalSummaryOffset': 962, 'uncompressBufSize': 16384})

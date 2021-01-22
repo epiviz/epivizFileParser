@@ -14,7 +14,6 @@
 # Example:
 # numpy==1.13.3
 # scipy==1.0
-# hany
 
 pandas~=1.2.0
 tiledb~=0.7.5
