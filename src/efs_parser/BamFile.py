@@ -97,7 +97,7 @@ class BamFile(SamFile):
 
             columns = self.get_col_names(result[0])
 
-            if respType is "DataFrame":
+            if respType == "DataFrame":
                 result = toDataFrame(result, self.columns)
             return result, None
         except ValueError as e:
