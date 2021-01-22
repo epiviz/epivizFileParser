@@ -74,6 +74,7 @@ Contents
    :maxdepth: 2
 
    Installation <installation>
+   Usage <usage>
    License <license>
    Authors <authors>
    Changelog <changelog>
