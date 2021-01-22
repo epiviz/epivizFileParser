@@ -2,12 +2,12 @@
 EFS Parser
 ==========
 
-.. image:: https://github.com/epiviz/efs_parser/workflows/efs_parser/badge.svg
-    :alt: efs_parser
-
 .. image:: https://readthedocs.org/projects/efs-parser/badge/?version=latest
     :target: https://efs-parser.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. image:: https://github.com/epiviz/efs_parser/workflows/efs_parser/badge.svg
+    :alt: efs_parser
 
 Parse and Query Genomic File Formats
 
