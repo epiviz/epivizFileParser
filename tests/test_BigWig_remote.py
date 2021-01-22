@@ -5,7 +5,7 @@ import os
 
 from efs_parser.BigWig import BigWig
 
-__author__ = "jkanche"
+__author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
@@ -14,10 +14,7 @@ __license__ = "mit"
     come from the pyBigWig library
 """
 
-#bb = BigWig("./test.bw")
 bb = BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
-#bb = BigWig("./39031.bigwig")
-
 
 def test_correct_format():
     assert (bb.header['magic']==2291137574)

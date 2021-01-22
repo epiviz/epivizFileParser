@@ -5,7 +5,7 @@ import os
 
 from efs_parser.BigBed import BigBed
 
-__author__ = "jkanche"
+__author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
@@ -15,7 +15,7 @@ __license__ = "mit"
 """
 
 bb = BigBed("https://obj.umiacs.umd.edu/bigwig-files/ENCFF330GHF.bigBed")
-#bb = BigBed("./ENCFF330GHF.bigBed")
+
 def test_correct_format():
     assert (bb.header['magic']==2273964779)
 

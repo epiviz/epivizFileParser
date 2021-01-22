@@ -5,7 +5,7 @@ import os
 
 from efs_parser.BigWig import BigWig
 
-__author__ = "jkanche"
+__author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
@@ -14,8 +14,6 @@ __license__ = "mit"
     come from the pyBigWig library
 """
 
-#bb = BigWig("./test.bw")
-#bb = BigWig("./ENCFF685PIH.bigWig")
 bb = BigWig("tests/test.bw")
 
 def test_header():
