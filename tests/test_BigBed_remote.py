@@ -31,8 +31,8 @@ def test_range():
     end = 10020000
     res, err = bb.getRange(chr="chr1", start=start, end=end)
     assert(err == None)
-    assert(len(res) == 437)
-    for i in range(0,437):
+    assert(len(res) == 102)
+    for i in range(0,102):
         assert ((res['start'][i] >= start and res['start'][i] <= end) or (res['end'][i] >= start and res['end'][i] <= end))
 
 def test_get_bytes():
