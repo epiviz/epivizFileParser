@@ -66,9 +66,9 @@ def test_zoom_levels():
         elif (l == 7):
             assert (len(res) == 3)
         elif (l == 8):
-            assert (len(res) == 1)
+            assert (len(res) == 0)
         if (l == 9):
-            assert (len(res) == 1)
+            assert (len(res) == 0)
 
 def test_get_bytes():
     res = bb.get_bytes(1, 100)
