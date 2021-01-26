@@ -184,7 +184,22 @@ class BigWig(BaseFile):
             if respType == "DataFrame":
                 result = toDataFrame(values, self.columns)
                 result["chr"] = chr
+                # checking range by: Hany Elgaml
+                start_index = 0
+                for i in range(0, len(result)):
+                    st = result['start'][i]
+                    en = result['end'][i]
+                    if ((st >= start and st <= end) or (en >= start and en <= end)):
+                        start_index = i
+                        break
+                result = result[start_index:]
+                index = result.index
+                result.insert(1, "new", 0)
+                for i in range(index.start, index.stop):
+                    result['new'][i] = i - index.start
+                result.set_index('new', inplace=True)
 
+                # -----------------------------------------
             return result, None
         except Exception as e:
             return result, str(e)
