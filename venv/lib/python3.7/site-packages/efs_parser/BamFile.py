@@ -45,11 +45,11 @@ class BamFile(SamFile):
         """
         return toDataFrame(result, self.columns)
 
-    def to_msgpack(self, result):
-        """
-        return object as msgpack
-        """
-        return toMsgpack(result)
+    # def to_msgpack(self, result):
+    #     """
+    #     return object as msgpack
+    #     """
+    #     return toMsgpack(result)
 
     def get_col_names(self, result):
         """
@@ -97,7 +97,7 @@ class BamFile(SamFile):
 
             columns = self.get_col_names(result[0])
 
-            if respType is "DataFrame":
+            if respType == "DataFrame":
                 result = toDataFrame(result, self.columns)
             return result, None
         except ValueError as e:
