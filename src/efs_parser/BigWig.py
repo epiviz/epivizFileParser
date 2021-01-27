@@ -186,11 +186,14 @@ class BigWig(BaseFile):
                 result["chr"] = chr
                 # checking range by: Hany Elgaml
 
-                query_string = '(start >= ' + str(start) + ' and start <= ' + str(end) + ') or (end >= ' + str(
-                    start) + ' and end <= ' + str(end) + ')'
+                #query_string = '(start >= ' + str(start) + ' and start <= ' + str(end) + ') or (end >= ' + str(
+                #    start) + ' and end <= ' + str(end) + ')'
+                #query_string = f"(start >= {start} and start <= {end} ) or (end >= {start} and end <= {end})"
+                query_string = f"start <= {end} and end >= {start}"
+
                 result = result.query(query_string)
-                result.insert(1, "new", range(0, len(result)))
-                result.set_index('new', inplace=True)
+                #result.insert(1, "new", range(0, len(result)))
+                #result.set_index('new', inplace=True)
 
                 # -----------------------------------------
             return result, None
