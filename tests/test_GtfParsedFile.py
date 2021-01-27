@@ -9,7 +9,7 @@ __author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
-bb = GtfParsedFile("tests/genes.tsv.gz")
+bb = GtfParsedFile("https://raw.github.com/epiviz/efs-genomes/master/hg38/genes.tsv.gz")
 
 def test_columns():
     assert (bb.columns==['chr', 'start', 'end', 'width', 'strand', 'geneid', 'exon_starts', 'exon_ends', 'gene'])
