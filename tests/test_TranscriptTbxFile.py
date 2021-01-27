@@ -9,7 +9,8 @@ __author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
-ee = TranscriptTbxFile("tests/transcripts.tsv.bgz")
+#ee = TranscriptTbxFile("tests/transcripts.tsv.bgz")
+ee = TranscriptTbxFile("https://raw.github.com/epiviz/efs-genomes/master/hg38/transcripts.tsv.bgz")
 
 def test_columns():
     assert (ee.columns==['chr', 'start', 'end', 'strand', 'transcript_id', 'exon_starts', 'exon_ends', 'gene'])
