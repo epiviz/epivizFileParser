@@ -185,6 +185,9 @@ class BigWig(BaseFile):
                 result = toDataFrame(values, self.columns)
                 result["chr"] = chr
 
+                query_string = f"start <= {end} and end >= {start}"
+                result = result.query(query_string)
+
             return result, None
         except Exception as e:
             return result, str(e)
