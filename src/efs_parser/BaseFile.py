@@ -253,8 +253,9 @@ class BaseFile(object):
             temp["end"] = chunk["end"].values[len(chunk) - 1]
             for col in columns:
                 temp[col] = chunk[col].mean()
+            rows.append(temp)
         
-        return pd.DataFrame(data), None
+        return pd.DataFrame(rows), None
 
     def get_status(self):
         """

@@ -184,18 +184,10 @@ class BigWig(BaseFile):
             if respType == "DataFrame":
                 result = toDataFrame(values, self.columns)
                 result["chr"] = chr
-                # checking range by: Hany Elgaml
 
-                #query_string = '(start >= ' + str(start) + ' and start <= ' + str(end) + ') or (end >= ' + str(
-                #    start) + ' and end <= ' + str(end) + ')'
-                #query_string = f"(start >= {start} and start <= {end} ) or (end >= {start} and end <= {end})"
                 query_string = f"start <= {end} and end >= {start}"
-
                 result = result.query(query_string)
-                #result.insert(1, "new", range(0, len(result)))
-                #result.set_index('new', inplace=True)
 
-                # -----------------------------------------
             return result, None
         except Exception as e:
             return result, str(e)
@@ -253,8 +245,6 @@ class BigWig(BaseFile):
                     lvl = level
                     offset = self.zooms[level][1]
         # if it is not zero
-        elif zoomlvl == 0:
-            offset = self.zooms[zoomlvl][1]
         elif zoomlvl is not -2:
             offset = self.zooms[zoomlvl - 1][1]
             lvl = zoomlvl
