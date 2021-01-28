@@ -220,17 +220,13 @@ class BaseFile(object):
             if len(temps) > 0:
                 for col in columns:
                     #row[col] = float(np.mean(temps[col].values))
-                    row[col] = np.mean(self.change_to_float(temps[col].values))
+                    #row[col] = np.mean(self.change_to_float(temps[col].values))
+                    values_to_fix = [float(i) for i in temps[col].values]
+                    row[col] = np.mean(values_to_fix)
 
         bins_df["start"] = bins_df.index.left
         bins_df["end"] = bins_df.index.right
         return bins_df, None
-
-    def change_to_float(self,dummy):
-        result=[]
-        for i in range(0, len(dummy)):
-            result.append(float(dummy[i]))
-        return result
 
     def simplified_bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins = 400):
         """
