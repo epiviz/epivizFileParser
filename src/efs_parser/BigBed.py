@@ -105,3 +105,18 @@ class BigBed(BigWig):
                             x += 1
                     x += 2
         return result
+    def groupRows(self,res):
+        result = pd.DataFrame(columns=res.columns)
+        first_row = True
+        index = 0
+        for _, row in res.iterrows():
+            if first_row:
+                result.loc[index] = row
+                first_row = False
+            else:
+                if row['name'] == result['name'][index]:
+                    result['end'][index] = row['end']
+                else:
+                    index += 1
+                    result.loc[index] = row
+        return result

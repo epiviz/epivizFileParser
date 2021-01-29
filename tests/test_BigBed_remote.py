@@ -2,6 +2,7 @@
 
 import pytest
 import os
+import pandas as pd
 
 from efs_parser.BigBed import BigBed
 
@@ -42,3 +43,28 @@ def test_bin_rows():
     result, err = bb.getRange(chr="chr1", start=10000000, end=10010000, bins=2000, zoomlvl=-2)
     res, err = bb.bin_rows(data=result, chr="chr1", start=10000000, end=10010000, columns=['score'])
     assert (err == None)
+
+def test_groupRows():
+    res, err = bb.getRange(chr="chr1", start=10000000, end=10202000, bins=2000, zoomlvl=-2)
+    result = bb.groupRows(res)
+    first_row = True
+    valid = True
+    for _, row in result.iterrows():
+        if first_row:
+            prev_name = row['name']
+            prev_end = row['end']
+            first_row = False
+        else:
+            # The name of the next row must be different
+            if prev_name == row['name']:
+                valid = False
+                break
+            # The start of the next row must be greater than or equal to the end of the previour record
+            if row['start'] < prev_end:
+                valid = False
+                break
+            prev_name = row['name']
+            prev_end = row['end']
+
+    assert (valid)
+
