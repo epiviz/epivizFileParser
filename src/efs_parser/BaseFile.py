@@ -219,7 +219,7 @@ class BaseFile(object):
             temps = data[(data.index.left <= index.right) & (data.index.right > index.left)]
             if len(temps) > 0:
                 for col in columns:
-                    row[col] = float(np.mean(temps[col].values))
+                    row[col] = np.mean(temps[col].astype(float))
 
         bins_df["start"] = bins_df.index.left
         bins_df["end"] = bins_df.index.right

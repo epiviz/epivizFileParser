@@ -37,3 +37,8 @@ def test_range():
 def test_get_bytes():
     res = bb.get_bytes(1, 100)
     assert (len(res) == 100)
+
+def test_bin_rows():
+    result, err = bb.getRange(chr="chr1", start=10000000, end=10010000, bins=2000, zoomlvl=-2)
+    res, err = bb.bin_rows(data=result, chr="chr1", start=10000000, end=10010000, columns=['score'])
+    assert (err == None)
