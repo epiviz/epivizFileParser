@@ -1,5 +1,4 @@
 import pandas
-# import umsgpack
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
@@ -29,13 +28,9 @@ def create_parser_object(format, source, columns=None):
     from .TranscriptTbxFile import TranscriptTbxFile
 
     req_manager = {
-        "BigWig": BigWig,
         "bigwig": BigWig,
-        "bigWig": BigWig,
         "bw": BigWig,
-        "BigBed": BigBed,
         "bigbed": BigBed,
-        "bigBed": BigBed,
         "bb": BigBed,
         "sam": SamFile,
         "bam": BamFile,
@@ -49,11 +44,8 @@ def create_parser_object(format, source, columns=None):
         "transcript": TranscriptTbxFile
     }
     
-    return req_manager[format](source, columns)
+    return req_manager[format.lower()](source, columns)
 
 def toDataFrame(records, header = None):
     input = pandas.DataFrame(records, columns=header)
     return input
-
-# def toMsgpack(msg):
-#     return umsgpack.packb(msg)

@@ -10,7 +10,7 @@ __license__ = "mit"
 
 class BigBed(BigWig):
     """
-    Bed file parser
+    BigBed file parser
     
     Args: 
         file (str): bigbed file location

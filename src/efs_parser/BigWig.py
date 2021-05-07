@@ -124,20 +124,6 @@ class BigWig(BaseFile):
         for level in range(0, totalLevels - 1):
             self.zooms[level].append(self.zooms[level + 1][2] - self.zooms[level][1])
 
-    def daskWrapper(self, fileObj, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "JSON"):
-        """Dask Wrapper
-        """
-        if hasattr(fileObj, 'zooms'):
-            self.zooms = getattr(fileObj, "zooms")
-        if hasattr(fileObj, 'chrmIds'):
-            self.chrmIds = getattr(fileObj, "chrmIds")
-        if hasattr(fileObj, 'tree'):
-            self.tree = getattr(fileObj, "tree")
-        if hasattr(fileObj, 'cacheData'):
-            self.cacheData = getattr(fileObj, "cacheData")
-        data = self.getRange(chr, start, end, bins, zoomlvl, metric, respType)
-        return data
-
     def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame", treedisk=None):
         """Get data for a given genomic location
 

@@ -178,7 +178,7 @@ class BaseFile(object):
 
     def bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins = 400):
         """
-        Summaize genomic data by bins parameter
+        Summarize genomic data by bins parameter
 
         Args:
             data: data frame with genomic data

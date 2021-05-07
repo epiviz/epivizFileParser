@@ -45,12 +45,6 @@ class BamFile(SamFile):
         """
         return toDataFrame(result, self.columns)
 
-    # def to_msgpack(self, result):
-    #     """
-    #     return object as msgpack
-    #     """
-    #     return toMsgpack(result)
-
     def get_col_names(self, result):
         """
         Columns of a bam file
