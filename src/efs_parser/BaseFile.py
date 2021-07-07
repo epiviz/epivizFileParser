@@ -178,7 +178,7 @@ class BaseFile(object):
 
     def bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins = 400):
         """
-        Summaize genomic data by bins parameter
+        Summarize genomic data by bins parameter
 
         Args:
             data: data frame with genomic data
@@ -219,7 +219,7 @@ class BaseFile(object):
             temps = data[(data.index.left <= index.right) & (data.index.right > index.left)]
             if len(temps) > 0:
                 for col in columns:
-                    row[col] = float(np.mean(temps[col].values))
+                    row[col] = np.mean(temps[col].astype(float))
 
         bins_df["start"] = bins_df.index.left
         bins_df["end"] = bins_df.index.right

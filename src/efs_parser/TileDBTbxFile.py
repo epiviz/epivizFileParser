@@ -3,8 +3,6 @@ from .SamFile import SamFile
 from .utils import toDataFrame
 from .Helper import get_range_helper
 import pandas as pd
-from aiocache import cached, Cache
-from aiocache.serializers import JsonSerializer, PickleSerializer
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
@@ -65,11 +63,3 @@ class TileDBTbxFile(SamFile):
             return self.toDF(result), None
         except Exception as e:
             raise Exception("didn't find chromId with the given name", str(e))
-
-    # @cached(ttl=None, cache=Cache.MEMORY, serializer=PickleSerializer(), namespace="tbxsearchgene")
-    # async def searchGene(self, query, maxResults = 5):
-    #     return [], None
-    
-    # @cached(ttl=None, cache=Cache.MEMORY, serializer=PickleSerializer(), namespace="tbxgetdata")
-    # async def get_data(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame"):
-    #     return self.getRange(chr, start, end, bins=bins, zoomlvl=zoomlvl, metric=metric, respType=respType)

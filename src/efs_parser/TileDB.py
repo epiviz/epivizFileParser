@@ -33,7 +33,7 @@ class TileDB(object):
 
             'cols' file - this is a tab-separated value file describing the columns of the tiledb array.
             It must have as many files as columns in the tiledb file. Column names for the tiledb array
-            will be obtained from the first column in this file (i.e., iti is read with 
+            will be obtained from the first column in this file (i.e., it is read with 
             pandas.read_csv(..., sep='\t', index_col=0)). 
     """
     def __init__(self, path):

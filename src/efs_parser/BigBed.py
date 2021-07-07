@@ -10,7 +10,7 @@ __license__ = "mit"
 
 class BigBed(BigWig):
     """
-    Bed file parser
+    BigBed file parser
     
     Args: 
         file (str): bigbed file location
@@ -105,3 +105,20 @@ class BigBed(BigWig):
                             x += 1
                     x += 2
         return result
+
+    def groupBy(self, data, column):
+        groups = data.groupby(column, sort=False)
+        records = []
+        for name, group in groups:
+            temp = {}
+            for key, value in group.iteritems(): 
+                if key == "start":
+                    temp[key] = value.min()
+                elif key == "end":
+                    temp[key] = value.max()
+                elif key == column:
+                    temp[key] = name
+                else:
+                    temp[key] = ",".join(value.unique())
+            records.append(temp)
+        return pd.DataFrame.from_records(records)
