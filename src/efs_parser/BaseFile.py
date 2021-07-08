@@ -12,6 +12,9 @@ import http
 import requests
 import ssl
 import time
+import boto3
+from botocore import UNSIGNED
+from botocore.client import Config
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
@@ -25,7 +28,7 @@ class BaseFile(object):
 
     Args:
         file: file location
-    
+
     Attributes:
         local: if file is local or hosted on a public server
         endian: check for endianess
@@ -46,6 +49,8 @@ class BaseFile(object):
             "iotime"
         }
         self.byteRanges = {}
+        self.bucketname="encode-public"
+
 
     def get_file_source(self, file):
         """
@@ -148,6 +153,14 @@ class BaseFile(object):
                 resp = response.read()
             return resp[:size]
 
+    def get_bytes_from_s3(self, offset, size):
+        s3client = boto3.client('s3', region_name='us-west-2', config=Config(signature_version=UNSIGNED))
+        key = self.file.replace(f"s3://{self.bucketname}/","")
+        bytes_range = "bytes=%d-%d" % (offset, offset+size)
+        resp = s3client.get_object(Bucket=self.bucketname,Key=key,Range=bytes_range)
+        data = resp['Body'].read()
+        return data[:size]
+
     def get_bytes(self, offset, size):
         """Get bytes within a given range [offset:offset+size]
 
@@ -165,7 +178,8 @@ class BaseFile(object):
             f.close()
             return bin_value
         elif self.file_source == "s3":
-            pass
+            response = self.get_bytes_from_s3(offset,size)
+            return response
         elif self.file_source == "http":
             headers = {"Range": "bytes=%d-%d" % (offset, offset+size) }
 
