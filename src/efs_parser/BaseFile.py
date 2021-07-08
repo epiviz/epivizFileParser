@@ -12,6 +12,9 @@ import http
 import requests
 import ssl
 import time
+import boto3
+from botocore import UNSIGNED
+from botocore.client import Config
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
@@ -25,7 +28,7 @@ class BaseFile(object):
 
     Args:
         file: file location
-    
+
     Attributes:
         local: if file is local or hosted on a public server
         endian: check for endianess
@@ -38,7 +41,7 @@ class BaseFile(object):
 
     def __init__(self, file):
         self.file = file
-        self.local = self.is_local(file)
+        self.file_source = self.get_file_source(file)
         self.endian = "="
         self.compressed = True
         self.conn = None
@@ -46,8 +49,10 @@ class BaseFile(object):
             "iotime"
         }
         self.byteRanges = {}
+        self.bucketname="encode-public"
 
-    def is_local(self, file):
+
+    def get_file_source(self, file):
         """
         Checks if file is local or hosted publicly
 
@@ -55,8 +60,11 @@ class BaseFile(object):
             file: location of file
         """
         if "http://" in file or "https://" in file or "ftp://" in file:
-            return False
-        return True
+            return "http"
+        elif "s3://" in file:
+            return "s3"
+        else:
+            return "local"
 
     def parse_header(self):
         raise Exception("NotImplementedException")
@@ -81,7 +89,7 @@ class BaseFile(object):
         Args:
             data: any data object to encode
 
-        Returns: 
+        Returns:
             data encoded as JSON
         """
         return ujson.dumps(data)
@@ -115,13 +123,15 @@ class BaseFile(object):
         Returns:
             binary string from file
         """
-        if self.local:
+        if self.file_source == "local":
             f = open(self.file, "rb")
             f.seek(offset)
             bin_value = f.read(size)
             f.close()
             return bin_value
-        else:
+        elif self.file_source == "s3":
+            pass
+        elif self.file_source == "http":
             headers = {"Range": "bytes=%d-%d" % (offset, offset+size) }
 
             if not hasattr(self, 'conn') or self.conn is None:
@@ -135,13 +145,21 @@ class BaseFile(object):
                 # connection redirected and found resource - usually https
                 new_loc = response.getheader("Location")
                 # print("url redirected & found ", new_loc)
-                self.parse_url(new_loc)    
+                self.parse_url(new_loc)
                 self.conn.request("GET", url=self.fuparse.path, headers=headers)
-                response = self.conn.getresponse()    
-                resp = response.read()    
+                response = self.conn.getresponse()
+                resp = response.read()
             else:
                 resp = response.read()
-            return resp[:size]       
+            return resp[:size]
+
+    def get_bytes_from_s3(self, offset, size):
+        s3client = boto3.client('s3', region_name='us-west-2', config=Config(signature_version=UNSIGNED))
+        key = self.file.replace(f"s3://{self.bucketname}/","")
+        bytes_range = "bytes=%d-%d" % (offset, offset+size)
+        resp = s3client.get_object(Bucket=self.bucketname,Key=key,Range=bytes_range)
+        data = resp['Body'].read()
+        return data[:size]
 
     def get_bytes(self, offset, size):
         """Get bytes within a given range [offset:offset+size]
@@ -153,13 +171,16 @@ class BaseFile(object):
         Returns:
             bytes from offset to (offset + size)
         """
-        if self.local:
+        if self.file_source == "local":
             f = open(self.file, "rb")
             f.seek(offset)
             bin_value = f.read(size)
             f.close()
             return bin_value
-        else:
+        elif self.file_source == "s3":
+            response = self.get_bytes_from_s3(offset,size)
+            return response
+        elif self.file_source == "http":
             headers = {"Range": "bytes=%d-%d" % (offset, offset+size) }
 
             start = time.time()
