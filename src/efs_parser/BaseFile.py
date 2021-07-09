@@ -41,6 +41,8 @@ class BaseFile(object):
 
     def __init__(self, file):
         self.file = file
+        self.bucketname = "encode-public"   # Default will be overwritten by split_s3_components
+        self.region_name = "us-west-2"      # Default will be overwritten by split_s3_components
         self.file_source = self.get_file_source(file)
         self.endian = "="
         self.compressed = True
@@ -49,8 +51,22 @@ class BaseFile(object):
             "iotime"
         }
         self.byteRanges = {}
-        self.bucketname="encode-public"
 
+    def split_s3_components(self,filename):
+        phase1 = filename.replace("s3://", "")
+        i = phase1.find("@")
+        if i > 0:
+            bucket_name = phase1[0:i]
+            phase2 = phase1.replace(f"{bucket_name}@", "")
+            j = phase2.find("/")
+            if j > 0:
+                region = phase2[0:j]
+                file_name = phase2[j+1:]
+            else:
+                raise Exception('Invalid S3 file name - missing file name')
+        else:
+            raise Exception('Invalid S3 file name - missing region name')
+        return bucket_name, region, file_name
 
     def get_file_source(self, file):
         """
@@ -62,6 +78,10 @@ class BaseFile(object):
         if "http://" in file or "https://" in file or "ftp://" in file:
             return "http"
         elif "s3://" in file:
+            bucket_name, region, file_name = self.split_s3_components(file)
+            self.file = file_name
+            self.bucketname = bucket_name
+            self.region_name = region
             return "s3"
         else:
             return "local"
@@ -155,8 +175,9 @@ class BaseFile(object):
             return resp[:size]
 
     def get_bytes_from_s3(self, offset, size):
-        s3client = boto3.client('s3', region_name='us-west-2', config=Config(signature_version=UNSIGNED))
-        key = self.file.replace(f"s3://{self.bucketname}/","")
+        s3client = boto3.client('s3', region_name=self.region_name, config=Config(signature_version=UNSIGNED))
+        #key = self.file.replace(f"s3://{self.bucketname}/","")
+        key = self.file
         bytes_range = "bytes=%d-%d" % (offset, offset+size)
         resp = s3client.get_object(Bucket=self.bucketname,Key=key,Range=bytes_range)
         data = resp['Body'].read()
