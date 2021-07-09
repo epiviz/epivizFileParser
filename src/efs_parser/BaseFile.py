@@ -130,7 +130,8 @@ class BaseFile(object):
             f.close()
             return bin_value
         elif self.file_source == "s3":
-            pass
+            response = self.get_bytes_from_s3(offset, size)
+            return response
         elif self.file_source == "http":
             headers = {"Range": "bytes=%d-%d" % (offset, offset+size) }
 
