@@ -41,8 +41,8 @@ class BaseFile(object):
 
     def __init__(self, file):
         self.file = file
-        self.bucketname = "encode-public"   # Default will be overwritten by split_s3_components
-        self.region_name = "us-west-2"      # Default will be overwritten by split_s3_components
+        self.bucketname = None
+        self.region_name = None
         self.file_source = self.get_file_source(file)
         self.endian = "="
         self.compressed = True
