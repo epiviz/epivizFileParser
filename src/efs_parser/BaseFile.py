@@ -44,6 +44,8 @@ class BaseFile(object):
         self.bucketname = None
         self.region_name = None
         self.file_source = self.get_file_source(file)
+        if self.file_source=="s3":
+            self.bucketname, self.region_name, self.file  = self.split_s3_components(file)
         self.endian = "="
         self.compressed = True
         self.conn = None
@@ -75,10 +77,6 @@ class BaseFile(object):
         if "http://" in file or "https://" in file or "ftp://" in file:
             return "http"
         elif "s3://" in file:
-            bucket_name, region, file_name = self.split_s3_components(file)
-            self.file = file_name
-            self.bucketname = bucket_name
-            self.region_name = region
             return "s3"
         else:
             return "local"
