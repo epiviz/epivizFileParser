@@ -14,7 +14,7 @@ __license__ = "mit"
     come from the pyBigWig library
 """
 
-bb = BigWig("s3://encode-public@us-west-2/2010/09/17/908fcd8c-9d81-4134-821e-0e9fae69be77/ENCFF000LMN.bigWig")
+bb = BigWig("s3://encode-public/2010/09/17/908fcd8c-9d81-4134-821e-0e9fae69be77/ENCFF000LMN.bigWig@us-west-2")
 
 def test_header():
     assert(bb.header == {'magic': 2291137574, 'version': 4, 'zoomLevels': 10, 'chromTreeOffset': 344, 'fullDataOffset': 705, 'fullIndexOffset': 212734456, 'fieldCount': 0, 'definedFieldCount': 0, 'autoSqlOffset': 0, 'totalSummaryOffset': 304, 'totalSummaryOffset': 304,'uncompressBufSize':32768})

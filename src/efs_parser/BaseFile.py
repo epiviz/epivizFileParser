@@ -54,18 +54,15 @@ class BaseFile(object):
 
     def split_s3_components(self,filename):
         phase1 = filename.replace("s3://", "")
-        i = phase1.find("@")
-        if i > 0:
-            bucket_name = phase1[0:i]
-            phase2 = phase1.replace(f"{bucket_name}@", "")
-            j = phase2.find("/")
-            if j > 0:
-                region = phase2[0:j]
-                file_name = phase2[j+1:]
-            else:
-                raise Exception('Invalid S3 file name - missing file name')
-        else:
+        region_start = phase1.find("@")
+        if region_start == -1:
             raise Exception('Invalid S3 file name - missing region name')
+        file_name_start = phase1.find("/")
+        if file_name_start == -1:
+            raise Exception('Invalid S3 file name - missing file name')
+        bucket_name = phase1[:file_name_start]
+        file_name = phase1[file_name_start + 1:region_start]
+        region = phase1[region_start + 1:]
         return bucket_name, region, file_name
 
     def get_file_source(self, file):
