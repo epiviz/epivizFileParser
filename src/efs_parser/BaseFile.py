@@ -64,7 +64,11 @@ class BaseFile(object):
             raise Exception('Invalid S3 file name - missing file name')
         bucket_name = phase1[:file_name_start]
         file_name = phase1[file_name_start + 1:region_start]
+        if file_name == "":
+            raise Exception('Invalid S3 file name - missing file name')
         region = phase1[region_start + 1:]
+        if region == "":
+            raise Exception('Invalid S3 file name - missing region name')
         return bucket_name, region, file_name
 
     def get_file_source(self, file):

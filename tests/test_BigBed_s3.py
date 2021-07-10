@@ -30,6 +30,16 @@ def test_split_s3_components():
         assert False
     except Exception:
         assert True
+    try:
+        bucket_name, region, file_name = bb.split_s3_components("s3://abs/@")
+        assert False
+    except Exception:
+        assert True
+    try:
+        bucket_name, region, file_name = bb.split_s3_components("s3://abs/file_name@")
+        assert False
+    except Exception:
+        assert True
 def test_header():
     assert(bb.header == {'magic': 2273964779, 'version': 4, 'zoomLevels': 9, 'chromTreeOffset': 1239, 'fullDataOffset': 1600, 'fullIndexOffset': 13614032, 'fieldCount': 9, 'definedFieldCount': 6, 'autoSqlOffset': 304, 'totalSummaryOffset': 1135, 'uncompressBufSize': 16384})
 
