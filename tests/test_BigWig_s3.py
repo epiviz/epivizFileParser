@@ -45,6 +45,5 @@ def test_simplified_bin_rows():
     #bb = BigWig("./39031.bigWig")
     start = 5000000
     end = 10020000
-    res, err = bb.getRange(chr="chr1", start=start, end=end)
-    v = bb.simplified_bin_rows(data=res, chr="chr1", start=start, end=end, columns=['score'], bins=10)
-    assert (len(v[0]) == 10)
+    v = bb.simplified_bin_rows(chr="chr1", start=start, end=end)
+    assert (len(v[0]) == 639)
