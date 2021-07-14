@@ -15,6 +15,8 @@ import time
 import boto3
 from botocore import UNSIGNED
 from botocore.client import Config
+import pandas as pd
+import json
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
@@ -311,3 +313,73 @@ class BaseFile(object):
             return len(res), None
         else:
             return 0, "Could not read bytes"
+
+    def simplify_data(self,data,result_type="mean"):
+        """
+        Args:
+            data: it is an array of arrays in that contains the [chr,start,end,score].
+                example:
+                    [['chr1', 1, 10, 5], ['chr1', 10, 100, 9], ['chr1', 120, 200, 20], ['chr1', 200, 210, 9]]
+
+        Returns:
+
+        """
+
+        def extract_rec_info(rec):
+            """
+
+            Args:
+                rec: is an array of the following format: [chr,start,end,score]
+
+            Returns:
+                start,end,score,score_sum,score_weighted_sum
+            """
+            start = rec[1]
+            end = rec[2]
+            score = rec[3]
+            score_sum = score
+            region_length = end - start + 1
+            score_weighted_sum = score * region_length
+            return start, end, score, score_sum, score_weighted_sum
+        result = []
+        row_count = len(data)
+        chr= data[0][0]
+        start, end, score, score_sum, score_weighted_sum = extract_rec_info(data[0])
+        count = 1
+        for i in range(1, row_count):
+            rec = data[i]
+            next_start, next_end, next_score, _, next_score_weighted_sum = extract_rec_info(rec)
+            if end == next_start:
+                end = next_end
+                score_sum += next_score
+                score_weighted_sum += next_score_weighted_sum
+                count += 1
+            else:
+                mean = score_sum / count
+                weighted_mean = score_weighted_sum / (end-start+1)
+                final_score = mean
+                if result_type=="weighted_mean":
+                    final_score=weighted_mean
+                #result.append({"chr":chr,"start": start, "end": end, "mean": mean, "weighted_mean": weighted_mean,"score":final_score})
+                result.append({"start": start, "end": end, "score":final_score})
+                start, end, score, score_sum, score_weighted_sum = extract_rec_info(rec)
+                count = 1
+        mean = score_sum / count
+        weighted_mean = score_weighted_sum / (end-start+1)
+        final_score = mean
+        if result_type == "weighted_mean":
+            final_score = weighted_mean
+        #result.append({"chr":chr,"start": start, "end": end, "mean": mean, "weighted_mean": weighted_mean,"score":final_score})
+        result.append({"start": start, "end": end, "score":final_score})
+
+        return result
+
+    def simplified(self,chr, start, end, columns=None, metadata=None, bins = 400,result_type="mean"):
+        data, err = self.getRange(chr=chr, start=start, end=end)
+
+        a = data.to_json(orient="split")
+        parsed = json.loads(a)
+        filtered_data = parsed['data']
+        rows = self.simplify_data(data=filtered_data,result_type=result_type)
+
+        return pd.DataFrame(rows), None
