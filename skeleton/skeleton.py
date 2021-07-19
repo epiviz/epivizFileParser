@@ -13,10 +13,10 @@ class NewFileParser(object):
     Class to parse `NewFileParser` files 
 
     Args:
-        file (str): file location can be local (full path) or hosted publicly
-        columns ([str]) : column names for various columns in file
+        file (str): file location can be local (full path) or hosted publicly (http or s3)
+        columns ([str]) : names for columns in file
     """
-    def __init__(self, file, columns=<NONE or list of columns in the file>):
+    def __init__(self, file, columns=None):
         self.fileSrc = file
         self.columns = columns
 
@@ -35,7 +35,8 @@ class NewFileParser(object):
             error 
                 if there was any error during the process
         """
-        <YOUR FUNC HERE>
+        result = None
+        error = None
+        # <YOUR FUNC HERE>
 
-
-        returns result, error
+        return (result, error)
