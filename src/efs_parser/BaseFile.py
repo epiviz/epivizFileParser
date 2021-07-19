@@ -272,37 +272,37 @@ class BaseFile(object):
         bins_df["end"] = bins_df.index.right
         return bins_df, None
 
-    # def simplified_bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins = 400):
-    #     """
-    #     Summaize genomic data by bins parameter
-    #
-    #     Args:
-    #         data: data frame with genomic data
-    #         chr: chromosome
-    #         start: start position
-    #         end: end poition
-    #         columns: names to map columns
-    #         metadata: metadata columns in the data frame
-    #         bins: numbers of bins to create
-    #
-    #     Returns:
-    #         a binned pandas dataframe
-    #     """
-    #     if len(data) == 0 or len(data) <= bins:
-    #         return data, None
-    #
-    #     chunks = np.array_split(data, bins)
-    #     rows = []
-    #     columns = ["score"]
-    #     for chunk in chunks:
-    #         temp = {}
-    #         temp["start"] = chunk["start"].values[0]
-    #         temp["end"] = chunk["end"].values[len(chunk) - 1]
-    #         for col in columns:
-    #             temp[col] = chunk[col].mean()
-    #         rows.append(temp)
-    #
-    #     return pd.DataFrame(rows), None
+    def simplified_bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins = 400):
+        """
+        Summaize genomic data by bins parameter
+    
+        Args:
+            data: data frame with genomic data
+            chr: chromosome
+            start: start position
+            end: end poition
+            columns: names to map columns
+            metadata: metadata columns in the data frame
+            bins: numbers of bins to create
+    
+        Returns:
+            a binned pandas dataframe
+        """
+        if len(data) == 0 or len(data) <= bins:
+            return data, None
+    
+        chunks = np.array_split(data, bins)
+        rows = []
+        columns = ["score"]
+        for chunk in chunks:
+            temp = {}
+            temp["start"] = chunk["start"].values[0]
+            temp["end"] = chunk["end"].values[len(chunk) - 1]
+            for col in columns:
+                temp[col] = chunk[col].mean()
+            rows.append(temp)
+    
+        return pd.DataFrame(rows), None
 
     def get_status(self):
         """
@@ -377,12 +377,12 @@ class BaseFile(object):
 
         return result
 
-    def simplified_bin_rows(self,chr, start, end, result_type="mean"):
-        data, err = self.getRange(chr=chr, start=start, end=end)
+    # def simplified_bin_rows(self,chr, start, end, result_type="mean"):
+    #     data, err = self.getRange(chr=chr, start=start, end=end)
 
-        a = data.to_json(orient="split")
-        parsed = json.loads(a)
-        filtered_data = parsed['data']
-        rows = self.simplify_data(data=filtered_data,result_type=result_type)
+    #     a = data.to_json(orient="split")
+    #     parsed = json.loads(a)
+    #     filtered_data = parsed['data']
+    #     rows = self.simplify_data(data=filtered_data,result_type=result_type)
 
-        return pd.DataFrame(rows), None
+    #     return pd.DataFrame(rows), None
