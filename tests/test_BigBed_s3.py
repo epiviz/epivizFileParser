@@ -15,6 +15,7 @@ __license__ = "mit"
 """
 
 bb = BigBed("s3://encode-public/2008/11/24/0868284e-8c3c-488d-89e6-487cd89971c3/ENCFF000AAU.broadPeak.bigbed@us-west-2")
+
 def test_split_s3_components():
     bucket_name, region, file_name = bb.split_s3_components("s3://bucket_name/2010/09/17/908fcd8c-9d81-4134-821e-0e9fae69be77/ENCFF000LMN.bigWig@s3_region")
     assert bucket_name == "bucket_name"
@@ -40,6 +41,7 @@ def test_split_s3_components():
         assert False
     except Exception:
         assert True
+
 def test_header():
     assert(bb.header == {'magic': 2273964779, 'version': 4, 'zoomLevels': 9, 'chromTreeOffset': 1239, 'fullDataOffset': 1600, 'fullIndexOffset': 13614032, 'fieldCount': 9, 'definedFieldCount': 6, 'autoSqlOffset': 304, 'totalSummaryOffset': 1135, 'uncompressBufSize': 16384})
 

@@ -6,6 +6,7 @@ import statistics
 from efs_parser.BigWig import BigWig
 bb = BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
 
+@pytest.mark.skip(reason="skip")
 def test_case_1():
     data = []
     data.append(['chr1',1,10,5])
@@ -22,6 +23,7 @@ def test_case_1():
 
     assert result[0]['start'] == 1 and result[0]['end']==210 and round(result[0]['score'], 3) == 14.229
 
+@pytest.mark.skip(reason="skip")
 def test_case_2():
     data = []
     data.append(['chr1',1,10,5])
@@ -37,6 +39,7 @@ def test_case_2():
     assert result[0]['start'] == 1 and result[0]['end'] == 100 and round(result[0]['score'], 3) == 8.690
     assert result[1]['start'] == 120 and result[1]['end'] == 210 and round(result[1]['score'], 3) == 18.890
 
+@pytest.mark.skip(reason="skip")
 def test_case_3():
     data = []
     data.append(['chr1',1,10,5])

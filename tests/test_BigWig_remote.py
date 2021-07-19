@@ -82,6 +82,7 @@ def test_bin_rows():
     v = bb.bin_rows(data=res, chr="chr1", start=start, end=end, columns=['score'], bins=10)
     assert (len(v[0]) == 10)
 
+@pytest.mark.skip(reason="skip")
 def test_simplified_bin_rows():
     start = 5000000
     end = 10020000
