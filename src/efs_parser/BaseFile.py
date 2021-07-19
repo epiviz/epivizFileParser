@@ -176,13 +176,16 @@ class BaseFile(object):
             return resp[:size]
 
     def get_bytes_from_s3(self, offset, size):
-        s3client = boto3.client('s3', region_name=self.region_name, config=Config(signature_version=UNSIGNED))
-        #key = self.file.replace(f"s3://{self.bucketname}/","")
-        key = self.file
-        bytes_range = "bytes=%d-%d" % (offset, offset+size)
-        resp = s3client.get_object(Bucket=self.bucketname,Key=key,Range=bytes_range)
-        data = resp['Body'].read()
-        return data[:size]
+        try:
+            s3client = boto3.client('s3', region_name=self.region_name, config=Config(signature_version=UNSIGNED))
+            #key = self.file.replace(f"s3://{self.bucketname}/","")
+            key = self.file
+            bytes_range = "bytes=%d-%d" % (offset, offset+size)
+            resp = s3client.get_object(Bucket=self.bucketname,Key=key,Range=bytes_range)
+            data = resp['Body'].read()
+            return data[:size]
+        except Exception as e:
+            raise(f"Cannot make S3 range requests: {str(e)}")
 
     def get_bytes(self, offset, size):
         """Get bytes within a given range [offset:offset+size]
