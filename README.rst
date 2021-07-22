@@ -6,8 +6,8 @@ EFS Parser
     :target: https://efs-parser.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://github.com/epiviz/efs_parser/workflows/efs_parser/badge.svg
-    :alt: efs_parser
+.. image:: https://github.com/epiviz/epivizFileParser/workflows/epivizFileParser/badge.svg
+    :alt: epivizFileParser
 
 Parse and Query Genomic File Formats
 

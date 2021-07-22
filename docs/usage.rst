@@ -6,7 +6,7 @@ For example, to read a BigWig file,
 
 .. code-block:: python
 
-    from efs_parser import BigWig
+    from epivizFileParser import BigWig
     
     # initialize a file
     bw = BigWig("tests/test.bw")

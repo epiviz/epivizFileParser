@@ -9,7 +9,7 @@ remotely hosted files. This requires the remotely hosted file to support HTTP By
 
 .. note::
 
-    - package is open source and is available on `GitHub <https://github.com/epiviz/efs_parser>`_
+    - package is open source and is available on `GitHub <https://github.com/epiviz/epivizFileParser>`_
 
 
 Installation
@@ -25,11 +25,11 @@ From GitHub (devel version)
 ===========================
 
 To install the devel version from `GitHub
-<https://github.com/epiviz/efs_parser>`__: Install using pip
+<https://github.com/epiviz/epivizFileParser>`__: Install using pip
 
 .. code-block:: console
 
-    pip install git@github.com:epiviz/efs_parser.git
+    pip install git@github.com:epiviz/epivizFileParser.git
 
 or clone the repository and install from local directory using `pip`
 
@@ -41,7 +41,7 @@ or clone the repository and install from local directory using `pip`
 
     .. code-block:: console
 
-        pip install --user git@github.com:epiviz/efs_parser.git
+        pip install --user git@github.com:epiviz/epivizFileParser.git
 
 Usage
 =====
@@ -50,7 +50,7 @@ For example, to read a BigWig file,
 
 .. code-block:: python
 
-    from efs_parser import BigWig
+    from epivizFileParser import BigWig
     
     # initialize a file
     bw = BigWig("tests/test.bw")

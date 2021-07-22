@@ -37,7 +37,7 @@ except ImportError:
     from sphinx import apidoc
 
 output_dir = os.path.join(__location__, "api")
-module_dir = os.path.join(__location__, "../src/efs_parser")
+module_dir = os.path.join(__location__, "../src/epivizFileParser")
 try:
     shutil.rmtree(output_dir)
 except FileNotFoundError:
@@ -93,7 +93,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "efs_parser"
+project = "epivizFileParser"
 copyright = "2021, jkanche"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -163,7 +163,7 @@ html_theme_options = {
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 try:
-    from efs_parser import __version__ as version
+    from epivizFileParser import __version__ as version
 except ImportError:
     pass
 else:
@@ -228,7 +228,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "efs_parser-doc"
+htmlhelp_basename = "epivizFileParser-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -245,7 +245,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "efs_parser Documentation", "jkanche", "manual")
+    ("index", "user_guide.tex", "epivizFileParser Documentation", "jkanche", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

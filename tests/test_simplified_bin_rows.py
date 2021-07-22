@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import json
 import statistics
-from efs_parser.BigWig import BigWig
+from epivizFileParser.BigWig import BigWig
 bb = BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
 
 @pytest.mark.skip(reason="skip")
