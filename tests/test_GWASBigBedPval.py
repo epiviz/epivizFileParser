@@ -3,7 +3,7 @@
 import pytest
 import os
 
-from epivizFileParser.GWASBigBedPval import GWASBigBedPval
+from epivizFileParser import GWASBigBedPval
 
 __author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
