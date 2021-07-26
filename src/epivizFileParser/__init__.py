@@ -22,3 +22,9 @@ from .GWASBigBedPIP import GWASBigBedPIP
 from .GWASBigBedPval import GWASBigBedPval
 from .S3HDF5File import S3HDF5File
 from .TranscriptTbxFile import TranscriptTbxFile
+from .SamFile import SamFile
+from .BamFile import BamFile
+from .TbxFile import TbxFile
+from .GtfFile import GtfFile
+from .InteractionBigBed import InteractionBigBed
+from .TileDB import TileDB
