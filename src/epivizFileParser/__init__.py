@@ -14,3 +14,11 @@ except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 finally:
     del version, PackageNotFoundError
+
+from .BigWig import BigWig
+from .BigBed import BigBed
+from .GtfParsedFile import GtfParsedFile
+from .GWASBigBedPIP import GWASBigBedPIP
+from .GWASBigBedPval import GWASBigBedPval
+from .S3HDF5File import S3HDF5File
+from .TranscriptTbxFile import TranscriptTbxFile

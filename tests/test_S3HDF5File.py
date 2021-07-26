@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from epivizFileParser.S3HDF5File import S3HDF5File
+from epivizFileParser import S3HDF5File
 
 __author__ = "Hany Elgaml"
 __copyright__ = "mit"

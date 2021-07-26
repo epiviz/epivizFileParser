@@ -3,7 +3,7 @@
 import pytest
 import os
 
-from epivizFileParser.BigWig import BigWig
+from epivizFileParser import BigWig
 
 __author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"

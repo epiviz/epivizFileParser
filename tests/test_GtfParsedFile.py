@@ -3,7 +3,7 @@
 import pytest
 import os
 
-from epivizFileParser.GtfParsedFile import GtfParsedFile
+from epivizFileParser import GtfParsedFile
 
 __author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"

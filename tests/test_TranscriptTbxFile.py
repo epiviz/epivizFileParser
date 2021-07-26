@@ -3,7 +3,7 @@
 import pytest
 import os
 
-from epivizFileParser.TranscriptTbxFile import TranscriptTbxFile
+from epivizFileParser import TranscriptTbxFile
 
 __author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
