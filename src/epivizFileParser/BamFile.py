@@ -6,6 +6,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class BamFile(SamFile):
     """
     Class to parse bam files 
@@ -13,7 +14,7 @@ class BamFile(SamFile):
     Args:
         file (str): file location can be local (full path) or hosted publicly
         columns ([str]) : names of columns in the bam file
-    
+
     Attributes:
         file: a pysam file object
         fileSrc: location of the file
@@ -29,7 +30,8 @@ class BamFile(SamFile):
 
     def get_bin(self, x):
         if self.value_temp is not x.get_num_aligned() and self.value_temp is not None:
-            self.result.append((self.chr_temp, self.start_temp, self.end_temp, self.value_temp))
+            self.result.append(
+                (self.chr_temp, self.start_temp, self.end_temp, self.value_temp))
             self.value_temp = None
 
         if self.value_temp is None:
@@ -50,10 +52,11 @@ class BamFile(SamFile):
         Columns of a bam file
         """
         if self.columns is None:
-            self.columns = ["chr", "start", "end", "number of sequence aligned"]
+            self.columns = ["chr", "start", "end",
+                            "number of sequence aligned"]
         return self.columns
 
-    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame"):
+    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType="DataFrame"):
         """
         Get data for a genomic location
 
@@ -89,10 +92,12 @@ class BamFile(SamFile):
 
                 endTemp = x.reference_pos+1
 
-            columns = self.get_col_names(result[0])
+            self.get_col_names(result[0])
 
             if respType == "DataFrame":
                 result = toDataFrame(result, self.columns)
             return result, None
         except ValueError as e:
-            raise Exception("didn't find chromId with the given name")
+            return None, "Didn't find chromId with the given name"
+        except IndexError as e:
+            return None, "No data in given range."
