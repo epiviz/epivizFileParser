@@ -6,6 +6,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class HDF5File(object):
     """
     HDF5 File Class to parse only local hdf5 files 
@@ -13,13 +14,14 @@ class HDF5File(object):
     Args:
         file (str): file location can be local (full path) or hosted publicly
         columns ([str]) : column names for various columns in file
-    
+
     Attributes:
         file: a pysam file object
         fileSrc: location of the file
         cacheData: cache of accessed data in memory
         columns: column names to use
     """
+
     def __init__(self, file):
         self.f = h5py.File(file, 'r')
 
@@ -37,7 +39,8 @@ class HDF5File(object):
                 if there was any error during the process
         """
         folder = self.f['matrix']
-        self.matrix = a = csc_matrix((folder['data'][()], folder['indices'][()], folder['indptr'][()]), shape=(folder['shape'][0],folder['shape'][1]))
+        self.matrix = a = csc_matrix((folder['data'][()], folder['indices'][(
+        )], folder['indptr'][()]), shape=(folder['shape'][0], folder['shape'][1]))
         genes = folder['features']['genome'][()]
         names = folder['features']['name'][()]
 
@@ -47,12 +50,12 @@ class HDF5File(object):
         result = {}
 
         # need to handle missing query
-        for query,index in zip(query_names, indecis):
+        for query, index in zip(query_names, indecis):
             result[query] = self.matrix[index, :].toarray()
 
         return result
 
-    def getRange(self, chr, start = None, end = None, row_names = None):
+    def getRange(self, chr, start=None, end=None, row_names=None):
         """Get data for a given genomic location
 
         Args:

@@ -9,6 +9,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class GtfFile(object):
     """
     Class to parse gtf/gff files 
@@ -16,26 +17,29 @@ class GtfFile(object):
     Args:
         file (str): file location can be local (full path) or hosted publicly
         columns ([str]) : column names for various columns in file
-    
+
     Attributes:
         file: a pysam file object
         fileSrc: location of the file
         cacheData: cache of accessed data in memory
         columns: column names to use
     """
+
     def __init__(self, file, columns=["chr", "source", "feature", "start", "end", "score", "strand", "frame", "group"]):
         self.fileSrc = file
         self.columns = columns
 
         print("Loading annotations", file)
-        gtf = pd.read_csv(file, sep="\t", names = columns)
-        
+        gtf = pd.read_csv(file, sep="\t", names=columns)
+
         print("Parsing gene names")
-        gtf["gene_id"] = gtf["group"].apply(self.parse_attribute, key="gene_id").replace('"', "")
+        gtf["gene_id"] = gtf["group"].apply(
+            self.parse_attribute, key="gene_id").replace('"', "")
         # self.file["gene_idx"] = self.file["gene_id"].replace('"', "")
 
         print("Parsing transcript ids")
-        gtf["transcript_id"] = gtf["group"].apply(self.parse_attribute, key="transcript_id")
+        gtf["transcript_id"] = gtf["group"].apply(
+            self.parse_attribute, key="transcript_id")
         # self.file = self.file.set_index("gene_idx")
 
         # print("Groupby genes and collapse exon positions")
@@ -46,7 +50,7 @@ class GtfFile(object):
 
         # for name, gdf in genes:
         #     gdf_exons = gdf[(gdf["feature"].str.contains("exon", case=False, regex=True))]
-            
+
         #     if len(gdf_exons) == 0:
         #         gdf_exons = gdf
 
@@ -86,13 +90,14 @@ class GtfFile(object):
         else:
             return None
 
-    def search_gene(self, query, maxResults = 5):
+    def search_gene(self, query, maxResults=5):
         result = []
         err = None
 
         try:
             if len(query) > 1:
-                genome = self.file[self.file["gene_id"].str.contains(query, na=False, case=False)]
+                genome = self.file[self.file["gene_id"].str.contains(
+                    query, na=False, case=False)]
 
                 genes = genome.groupby("gene_id")
                 for name, gdf in genes:
@@ -100,7 +105,7 @@ class GtfFile(object):
                         "chr": gdf["chr"].unique()[0],
                         "start": int(gdf["start"].values.min()),
                         "end": int(gdf["end"].values.max()),
-                        "gene": name.replace('"', "")            
+                        "gene": name.replace('"', "")
                     }
                     result.append(rec)
 
@@ -112,7 +117,7 @@ class GtfFile(object):
                 #         "gene": row["gene_id"]
                 #     }
                 #     result.append(rec)
-                
+
                 return result, err
         except Exception as e:
             return {}, str(e)
@@ -120,7 +125,7 @@ class GtfFile(object):
     def get_col_names(self):
         return self.columns
 
-    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame"):
+    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType="DataFrame"):
         """Get data for a given genomic location
 
         Args:
@@ -135,18 +140,21 @@ class GtfFile(object):
             error 
                 if there was any error during the process
         """
-        result = pd.DataFrame(columns=["chr", "start", "end", "width", "strand", "geneid", "exon_starts", "exon_ends", "gene"])
+        result = pd.DataFrame(columns=[
+                              "chr", "start", "end", "width", "strand", "geneid", "exon_starts", "exon_ends", "gene"])
 
         try:
-            grange = self.file[(self.file.index.left <= end) & (self.file.index.right >= start) & (self.file["chr"] == chr)]
+            grange = self.file[(self.file.index.left <= end) & (
+                self.file.index.right >= start) & (self.file["chr"] == chr)]
             # grange = grange.sort_values(by=["start", "end"])
 
             if len(grange) > 0:
                 genes = grange.groupby("gene_id")
 
                 for name, gdf in genes:
-                    gdf_exons = gdf[(gdf["feature"].str.contains("exon", case=False, regex=True))]
-                    
+                    gdf_exons = gdf[(gdf["feature"].str.contains(
+                        "exon", case=False, regex=True))]
+
                     if len(gdf_exons) == 0:
                         gdf_exons = gdf
 
@@ -163,7 +171,7 @@ class GtfFile(object):
                     }
                     result = result.append(rec, ignore_index=True)
 
-                return result, None    
+                return result, None
             else:
                 return result, "no genes in the current region"
 
@@ -171,9 +179,9 @@ class GtfFile(object):
             return result, str(e)
 
     @cached(ttl=None, cache=Cache.MEMORY, serializer=PickleSerializer(), namespace="gtfsearchgene")
-    async def searchGene(self, query, maxResults = 5):
+    async def searchGene(self, query, maxResults=5):
         return self.search_gene(query, maxResults)
-    
+
     @cached(ttl=None, cache=Cache.MEMORY, serializer=PickleSerializer(), namespace="gtfgetdata")
-    async def get_data(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame"):
+    async def get_data(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType="DataFrame"):
         return self.getRange(chr, start, end, bins=bins, zoomlvl=zoomlvl, metric=metric, respType=respType)

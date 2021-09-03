@@ -11,6 +11,7 @@ API_URL = ""
 S3_URL = ""
 u = S3HDF5File(API_URL, S3_URL)
 
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_1():
     response = u.getMatrix('1:8', '1:6')
@@ -19,6 +20,7 @@ def test_call_getMatrix_1():
         col_cnt = len(response[0])
     assert (row_cnt == 7)
     assert (col_cnt == 5)
+
 
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_2():
@@ -32,6 +34,7 @@ def test_call_getMatrix_2():
     assert (row_cnt == 7)
     assert (col_cnt == 2)
 
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_3():
     response = u.getMatrix('1:8', '1')
@@ -44,10 +47,12 @@ def test_call_getMatrix_3():
     assert (row_cnt == 7)
     assert (col_cnt == 1)
 
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_4():
     response = u.getMatrix('1', '1')
     assert (isinstance(response, list) == False)
+
 
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_5():
@@ -61,6 +66,7 @@ def test_call_getMatrix_5():
     assert (row_cnt == 5)
     assert (col_cnt == 1)
 
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_6():
     response = u.getMatrix('[1,2,3,5,9]', '1:7')
@@ -73,10 +79,12 @@ def test_call_getMatrix_6():
     assert (row_cnt == 5)
     assert (col_cnt == 6)
 
+
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_7():
     response = u.getMatrix('[1,2,3,5,9]', '[1,7]')
     assert (response == 'error')
+
 
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_8():
@@ -89,6 +97,7 @@ def test_call_getMatrix_8():
             row_cnt = 1
     assert (row_cnt == 1)
     assert (col_cnt == 6)
+
 
 @pytest.mark.skip(reason="no way of currently testing this")
 def test_call_getMatrix_9():

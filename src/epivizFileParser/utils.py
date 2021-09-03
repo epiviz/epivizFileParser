@@ -4,6 +4,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 def create_parser_object(format, source, columns=None):
     """Create appropriate File class based on file format
 
@@ -13,8 +14,8 @@ def create_parser_object(format, source, columns=None):
 
     Returns:
         An instance of parser class
-    """  
-    
+    """
+
     from .BigBed import BigBed
     from .BigWig import BigWig
     from .SamFile import SamFile
@@ -43,9 +44,10 @@ def create_parser_object(format, source, columns=None):
         "interaction_bigbed": InteractionBigBed,
         "transcript": TranscriptTbxFile
     }
-    
+
     return req_manager[format.lower()](source, columns)
 
-def toDataFrame(records, header = None):
+
+def toDataFrame(records, header=None):
     input = pandas.DataFrame(records, columns=header)
     return input

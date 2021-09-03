@@ -6,6 +6,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class SamFile(object):
     """
     SAM File Class to parse sam files 
@@ -13,13 +14,14 @@ class SamFile(object):
     Args:
         file (str): file location can be local (full path) or hosted publicly
         columns ([str]) : column names for various columns in file
-    
+
     Attributes:
         file: a pysam file object
         fileSrc: location of the file
         cacheData: cache of accessed data in memory
         columns: column names to use
     """
+
     def __init__(self, file, columns=None):
         self.file = pysam.AlignmentFile(file, "r")
         self.fileSrc = file
@@ -31,7 +33,7 @@ class SamFile(object):
 
     def set_cache(self, cache):
         self.cacheData = cache
-        
+
     def get_bin(self, x):
         return (x.reference_name, x.reference_start, x.reference_end, x.query_alignment_sequence, x.query_sequence)
 
@@ -40,10 +42,11 @@ class SamFile(object):
 
     def get_col_names(self, result):
         if self.columns is None:
-            self.columns = ["chr", "start", "end", "query_alignment_sequence", "query_sequence"]
+            self.columns = ["chr", "start", "end",
+                            "query_alignment_sequence", "query_sequence"]
         return self.columns
 
-    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame"):
+    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType="DataFrame"):
         """Get data for a given genomic location
 
         Args:
@@ -71,7 +74,8 @@ class SamFile(object):
             # if respType is "DataFrame":
             #     result = toDataFrame(result, self.columns)
 
-            (result, _) = get_range_helper(self.toDF, self.get_bin, self.get_col_names, chr, start, end, iter, self.columns, respType)
+            (result, _) = get_range_helper(self.toDF, self.get_bin,
+                                           self.get_col_names, chr, start, end, iter, self.columns, respType)
 
             return result, None
         except ValueError as e:

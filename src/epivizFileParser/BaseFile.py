@@ -22,6 +22,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class BaseFile(object):
     """
     Base file class for all parsers
@@ -46,8 +47,9 @@ class BaseFile(object):
         self.bucketname = None
         self.region_name = None
         self.file_source = self.get_file_source(file)
-        if self.file_source=="s3":
-            self.bucketname, self.region_name, self.file  = self.split_s3_components(file)
+        if self.file_source == "s3":
+            self.bucketname, self.region_name, self.file = self.split_s3_components(
+                file)
         self.endian = "="
         self.compressed = True
         self.conn = None
@@ -56,7 +58,7 @@ class BaseFile(object):
         }
         self.byteRanges = {}
 
-    def split_s3_components(self,filename):
+    def split_s3_components(self, filename):
         phase1 = filename.replace("s3://", "")
         region_start = phase1.find("@")
         if region_start == -1:
@@ -128,7 +130,8 @@ class BaseFile(object):
         if self.fuparse.scheme in ["ftp", "http"]:
             self.conn = http.client.HTTPConnection(self.fuparse.netloc)
         elif self.fuparse.scheme in ["ftps", "https"]:
-            self.conn = http.client.HTTPSConnection(self.fuparse.netloc, context=ssl._create_unverified_context())
+            self.conn = http.client.HTTPSConnection(
+                self.fuparse.netloc, context=ssl._create_unverified_context())
 
     def parse_url(self, furl=None):
         self.conn = requests.Session()
@@ -154,7 +157,7 @@ class BaseFile(object):
             response = self.get_bytes_from_s3(offset, size)
             return response
         elif self.file_source == "http":
-            headers = {"Range": "bytes=%d-%d" % (offset, offset+size) }
+            headers = {"Range": "bytes=%d-%d" % (offset, offset+size)}
 
             if not hasattr(self, 'conn') or self.conn is None:
                 self.parse_url_http()
@@ -168,7 +171,8 @@ class BaseFile(object):
                 new_loc = response.getheader("Location")
                 # print("url redirected & found ", new_loc)
                 self.parse_url(new_loc)
-                self.conn.request("GET", url=self.fuparse.path, headers=headers)
+                self.conn.request(
+                    "GET", url=self.fuparse.path, headers=headers)
                 response = self.conn.getresponse()
                 resp = response.read()
             else:
@@ -177,11 +181,13 @@ class BaseFile(object):
 
     def get_bytes_from_s3(self, offset, size):
         try:
-            s3client = boto3.client('s3', region_name=self.region_name, config=Config(signature_version=UNSIGNED))
+            s3client = boto3.client(
+                's3', region_name=self.region_name, config=Config(signature_version=UNSIGNED))
             #key = self.file.replace(f"s3://{self.bucketname}/","")
             key = self.file
             bytes_range = "bytes=%d-%d" % (offset, offset+size)
-            resp = s3client.get_object(Bucket=self.bucketname,Key=key,Range=bytes_range)
+            resp = s3client.get_object(
+                Bucket=self.bucketname, Key=key, Range=bytes_range)
             data = resp['Body'].read()
             return data[:size]
         except Exception as e:
@@ -204,10 +210,10 @@ class BaseFile(object):
             f.close()
             return bin_value
         elif self.file_source == "s3":
-            response = self.get_bytes_from_s3(offset,size)
+            response = self.get_bytes_from_s3(offset, size)
             return response
         elif self.file_source == "http":
-            headers = {"Range": "bytes=%d-%d" % (offset, offset+size) }
+            headers = {"Range": "bytes=%d-%d" % (offset, offset+size)}
 
             start = time.time()
             if not hasattr(self, 'conn') or self.conn is None:
@@ -223,7 +229,7 @@ class BaseFile(object):
 
             return resp.content[:size]
 
-    def bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins = 400):
+    def bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins=400):
         """
         Summarize genomic data by bins parameter
 
@@ -240,7 +246,7 @@ class BaseFile(object):
             a binned pandas dataframe
         """
 
-        if len(data) == 0: 
+        if len(data) == 0:
             return data, None
 
         freq = round((end-start)/bins)
@@ -263,7 +269,8 @@ class BaseFile(object):
 
         # map data to bins
         for index, row in bins_df.iterrows():
-            temps = data[(data.index.left <= index.right) & (data.index.right > index.left)]
+            temps = data[(data.index.left <= index.right) &
+                         (data.index.right > index.left)]
             if len(temps) > 0:
                 for col in columns:
                     row[col] = np.mean(temps[col].astype(float))
@@ -272,10 +279,10 @@ class BaseFile(object):
         bins_df["end"] = bins_df.index.right
         return bins_df, None
 
-    def simplified_bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins = 400):
+    def simplified_bin_rows(self, data, chr, start, end, columns=None, metadata=None, bins=400):
         """
         Summaize genomic data by bins parameter
-    
+
         Args:
             data: data frame with genomic data
             chr: chromosome
@@ -284,13 +291,13 @@ class BaseFile(object):
             columns: names to map columns
             metadata: metadata columns in the data frame
             bins: numbers of bins to create
-    
+
         Returns:
             a binned pandas dataframe
         """
         if len(data) == 0 or len(data) <= bins:
             return data, None
-    
+
         chunks = np.array_split(data, bins)
         rows = []
         columns = ["score"]
@@ -301,7 +308,7 @@ class BaseFile(object):
             for col in columns:
                 temp[col] = chunk[col].mean()
             rows.append(temp)
-    
+
         return pd.DataFrame(rows), None
 
     def get_status(self):
@@ -312,12 +319,12 @@ class BaseFile(object):
             length of response or error
         """
         res = self.get_bytes(0, 64)
-        if len(res) > 0 :
+        if len(res) > 0:
             return len(res), None
         else:
             return 0, "Could not read bytes"
 
-    def simplify_data(self,data,result_type="mean"):
+    def simplify_data(self, data, result_type="mean"):
         """
         Args:
             data: it is an array of arrays in that contains the [chr,start,end,score].
@@ -346,12 +353,14 @@ class BaseFile(object):
             return start, end, score, score_sum, score_weighted_sum
         result = []
         row_count = len(data)
-        chr= data[0][0]
-        start, end, score, score_sum, score_weighted_sum = extract_rec_info(data[0])
+        chr = data[0][0]
+        start, end, score, score_sum, score_weighted_sum = extract_rec_info(
+            data[0])
         count = 1
         for i in range(1, row_count):
             rec = data[i]
-            next_start, next_end, next_score, _, next_score_weighted_sum = extract_rec_info(rec)
+            next_start, next_end, next_score, _, next_score_weighted_sum = extract_rec_info(
+                rec)
             if end == next_start:
                 end = next_end
                 score_sum += next_score
@@ -361,11 +370,13 @@ class BaseFile(object):
                 mean = score_sum / count
                 weighted_mean = score_weighted_sum / (end-start+1)
                 final_score = mean
-                if result_type=="weighted_mean":
-                    final_score=weighted_mean
+                if result_type == "weighted_mean":
+                    final_score = weighted_mean
                 #result.append({"chr":chr,"start": start, "end": end, "mean": mean, "weighted_mean": weighted_mean,"score":final_score})
-                result.append({"start": start, "end": end, "score":final_score})
-                start, end, score, score_sum, score_weighted_sum = extract_rec_info(rec)
+                result.append(
+                    {"start": start, "end": end, "score": final_score})
+                start, end, score, score_sum, score_weighted_sum = extract_rec_info(
+                    rec)
                 count = 1
         mean = score_sum / count
         weighted_mean = score_weighted_sum / (end-start+1)
@@ -373,7 +384,7 @@ class BaseFile(object):
         if result_type == "weighted_mean":
             final_score = weighted_mean
         #result.append({"chr":chr,"start": start, "end": end, "mean": mean, "weighted_mean": weighted_mean,"score":final_score})
-        result.append({"start": start, "end": end, "score":final_score})
+        result.append({"start": start, "end": end, "score": final_score})
 
         return result
 

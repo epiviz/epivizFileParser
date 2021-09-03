@@ -8,16 +8,17 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class BigBed(BigWig):
     """
     BigBed file parser
-    
+
     Args: 
         file (str): bigbed file location
     """
 
     magic = "0x8789F2EB"
-    
+
     def __init__(self, file, columns=None):
         self.colFlag = False
         super(BigBed, self).__init__(file, columns=columns)
@@ -36,7 +37,8 @@ class BigBed(BigWig):
                 cols.append("column_" + str(i))
             return cols
         else:
-            data = self.get_bytes(self.header.get("autoSqlOffset"), self.header.get("totalSummaryOffset") - self.header.get("autoSqlOffset"))
+            data = self.get_bytes(self.header.get("autoSqlOffset"), self.header.get(
+                "totalSummaryOffset") - self.header.get("autoSqlOffset"))
             data = data.decode('utf-8')
             columns = []
             lines = data.split("\n")
@@ -54,7 +56,7 @@ class BigBed(BigWig):
     def parseLeafDataNode(self, chrmId, start, end, zoomlvl, rStartChromIx, rStartBase, rEndChromIx, rEndBase, rdataOffset, rDataSize):
         """
         Parse leaf data node in file
-        """       
+        """
         if self.cacheData.get(str(zoomlvl) + "-" + str(rdataOffset)):
             decom = self.cacheData.get(str(zoomlvl) + "-" + str(rdataOffset))
         else:
@@ -68,39 +70,46 @@ class BigBed(BigWig):
         length = len(decom)
 
         if zoomlvl is not -2:
-            ## Not used currently.
-            ## see todo above
+            # Not used currently.
+            # see todo above
             itemCount = int(len(decom)/32)
             for i in range(0, itemCount):
-                (chromId, statv, endv, validCount, minVal, maxVal, sumData, sumSquares) = struct.unpack("4I4f", decom[i*32 : (i+1)*32])
+                (chromId, statv, endv, validCount, minVal, maxVal, sumData,
+                 sumSquares) = struct.unpack("4I4f", decom[i*32: (i+1)*32])
         else:
             # print(chromId, chromStart, chromEnd, itemStep, itemSpan, iType, itemCount)
             while x < length:
-                (chrmIdv, startv, endv) = struct.unpack(self.endian + "III", decom[x:x + 12])
+                (chrmIdv, startv, endv) = struct.unpack(
+                    self.endian + "III", decom[x:x + 12])
                 x += 12
-                
-                if self.header.get("fieldCount") == 3: 
+
+                if self.header.get("fieldCount") == 3:
                     result.append((chrmIdv, startv, endv))
                     x += 1
                 elif self.header.get("fieldCount") > 3:
                     if chrmIdv == chrmId:
                         valuev = ""
                         while x < length:
-                            (tempv) = struct.unpack(self.endian + "c", decom[x:x+1])
-                            (tempNext) = struct.unpack(self.endian + "c", decom[x+1:x+2])
+                            (tempv) = struct.unpack(
+                                self.endian + "c", decom[x:x+1])
+                            (tempNext) = struct.unpack(
+                                self.endian + "c", decom[x+1:x+2])
                             valuev += str(tempv[0].decode())
-                            if tempNext[0].decode() == '\x00': 
+                            if tempNext[0].decode() == '\x00':
                                 if startv <= end:
                                     tRec = (chrmIdv, startv, endv)
-                                    tValues = tuple(valuev.split("\t", len(self.columns) - 4))
+                                    tValues = tuple(valuev.split(
+                                        "\t", len(self.columns) - 4))
                                     result.append(tRec + tValues)
                                 break
                             x += 1
                     else:
                         while x < length:
-                            (tempv) = struct.unpack(self.endian + "c", decom[x:x+1])
-                            (tempNext) = struct.unpack(self.endian + "c", decom[x+1:x+2])
-                            if tempNext[0].decode() == '\x00': 
+                            (tempv) = struct.unpack(
+                                self.endian + "c", decom[x:x+1])
+                            (tempNext) = struct.unpack(
+                                self.endian + "c", decom[x+1:x+2])
+                            if tempNext[0].decode() == '\x00':
                                 break
                             x += 1
                     x += 2
@@ -111,7 +120,7 @@ class BigBed(BigWig):
         records = []
         for name, group in groups:
             temp = {}
-            for key, value in group.iteritems(): 
+            for key, value in group.iteritems():
                 if key == "start":
                     temp[key] = value.min()
                 elif key == "end":

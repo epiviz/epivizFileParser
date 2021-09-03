@@ -8,6 +8,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class TileDBTbxFile(SamFile):
     """
     Tiledb specific TBX File Class to parse genomic row information
@@ -15,13 +16,14 @@ class TileDBTbxFile(SamFile):
     Args:
         file (str): file location can be local (full path) or hosted publicly
         columns ([str]) : column names for various columns in file
-    
+
     Attributes:
         file: a pysam file object
         fileSrc: location of the file
         cacheData: cache of accessed data in memory
         columns: column names to use
     """
+
     def __init__(self, file, columns=["chr", "start", "end", "rownumber", "gene"]):
         self.file = pysam.TabixFile(file)
         self.cacheData = {}
@@ -41,7 +43,7 @@ class TileDBTbxFile(SamFile):
     def toDF(self, result):
         return toDataFrame(result, self.columns)
 
-    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame"):
+    def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType="DataFrame"):
         """Get data for a given genomic location
 
         Args:
@@ -58,7 +60,8 @@ class TileDBTbxFile(SamFile):
         """
         try:
             iter = self.file.fetch(chr, start, end)
-            (result, _) = get_range_helper(self.toDF, self.get_bin, self.get_col_names, chr, start, end, iter, self.columns, respType)
+            (result, _) = get_range_helper(self.toDF, self.get_bin,
+                                           self.get_col_names, chr, start, end, iter, self.columns, respType)
 
             return self.toDF(result), None
         except Exception as e:

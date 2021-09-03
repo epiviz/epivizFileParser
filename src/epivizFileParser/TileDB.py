@@ -8,6 +8,7 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
+
 class TileDB(object):
     """
     TileDB Class to parse only local tiledb files 
@@ -36,6 +37,7 @@ class TileDB(object):
             will be obtained from the first column in this file (i.e., it is read with 
             pandas.read_csv(..., sep='\t', index_col=0)). 
     """
+
     def __init__(self, path):
         self.path = path
         self.count = tiledb.open(path + "/data.tiledb", 'r')
@@ -57,9 +59,9 @@ class TileDB(object):
         # metadata = [m for m in metadata if m not in ['seqnames', 'start', 'end', 'chr']]
         self.rows = TileDBTbxFile(path + "/rows.tsv.bgz", columns=fmeta)
         self.cols = pd.read_csv(path + "/cols.tsv", sep="\t", index_col=0)
-        self.columns = self.cols["epiviz_ids"].values # self.cols.index.values
+        self.columns = self.cols["epiviz_ids"].values  # self.cols.index.values
 
-    def getRange(self, chr, start = None, end = None, bins=2000, zoomlvl=-1, metric="AVG", respType = "DataFrame", treedisk=None):
+    def getRange(self, chr, start=None, end=None, bins=2000, zoomlvl=-1, metric="AVG", respType="DataFrame", treedisk=None):
         """Get data for a given genomic location
 
         Args:
@@ -80,13 +82,15 @@ class TileDB(object):
             # result_rows = self.rows[(self.rows["chr"] == chr) & (self.rows["start"] <= end) & (self.rows["end"] >= start)]
             result_rows, err = self.rows.getRange('"' + chr + '"', start, end)
             result_rows = result_rows.applymap(lambda x: x.replace('"', ''))
-            
+
             indices = result_rows["X__rowindex"].values.astype(int)
             result_rows.index = indices
-            matrix = self.count[min(indices):max(indices)+1,]['vals']
-            
-            result_matrix = pd.DataFrame(matrix, index=range(min(indices), max(indices)+1), columns=self.columns)
-            result_merge = pd.concat([result_rows, result_matrix], axis=1, join="inner")
+            matrix = self.count[min(indices):max(indices)+1, ]['vals']
+
+            result_matrix = pd.DataFrame(matrix, index=range(
+                min(indices), max(indices)+1), columns=self.columns)
+            result_merge = pd.concat(
+                [result_rows, result_matrix], axis=1, join="inner")
             return result_merge, None
         except Exception as e:
             print(str(e))

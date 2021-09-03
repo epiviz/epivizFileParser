@@ -5,7 +5,7 @@ import os
 
 from epivizFileParser import BamFile
 
-__author__ = "jkanche, elgaml"
+__author__ = "jkanche, Victor"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
@@ -21,7 +21,7 @@ def test_res():
     res, err = bb.getRange("chr10", 1, 100000000)
     assert(err == None)
     assert(len(bb.columns) == 4)
-    assert(bb.columns == ["chr", "start", "end", "number of sequence aligned"])
+    assert(bb.columns == ["chr", "start", "end", "value"])
     assert(len(res) == 8)
 
 

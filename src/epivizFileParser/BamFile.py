@@ -53,7 +53,7 @@ class BamFile(SamFile):
         """
         if self.columns is None:
             self.columns = ["chr", "start", "end",
-                            "number of sequence aligned"]
+                            "value"]
         return self.columns
 
     def getRange(self, chr, start, end, bins=2000, zoomlvl=-1, metric="AVG", respType="DataFrame"):
