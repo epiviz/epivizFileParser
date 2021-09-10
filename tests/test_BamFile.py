@@ -18,7 +18,8 @@ bb = BamFile("tests/data/test.bam")
 
 
 def test_getRange():
-    res = bb.getRange("chr10", 1, 100000000)
+    res, error = bb.getRange("chr10", 1, 100000000)
+    assert(error == None)
     assert(len(bb.columns) == 4)
     assert(bb.columns == ["chr", "start", "end", "value"])
     assert(len(res) == 8)
@@ -35,4 +36,4 @@ def test_input_error():
 
 
 def test_empty():
-    assert(len(bb.getRange("chr10", 4, 7)) == 0)
+    assert(len(bb.getRange("chr10", 4, 7)[0]) == 0)

@@ -77,28 +77,29 @@ class BamFile(SamFile):
 
         try:
             iter = self.file.pileup(chr, start, end)
+
+            chrTemp = startTemp = endTemp = valueTemp = None
+            for x in iter:
+                if valueTemp is None:
+                    chrTemp = x.reference_name
+                    startTemp = x.reference_pos
+                    valueTemp = x.get_num_aligned()
+                elif valueTemp is not x.get_num_aligned():
+                    result.append((chrTemp, startTemp, endTemp, valueTemp))
+                    chrTemp = x.reference_name
+                    startTemp = x.reference_pos
+                    valueTemp = x.get_num_aligned()
+
+                endTemp = x.reference_pos+1
+
+            self.get_col_names()
+
+            if respType == "DataFrame":
+                result = toDataFrame(result, self.columns)
+
         except ValueError as e:
             raise Exception("Invalid input. (chr, start, end)")
         except Exception as e:
             raise Exception(str(e))
 
-        chrTemp = startTemp = endTemp = valueTemp = None
-        for x in iter:
-            if valueTemp is None:
-                chrTemp = x.reference_name
-                startTemp = x.reference_pos
-                valueTemp = x.get_num_aligned()
-            elif valueTemp is not x.get_num_aligned():
-                result.append((chrTemp, startTemp, endTemp, valueTemp))
-                chrTemp = x.reference_name
-                startTemp = x.reference_pos
-                valueTemp = x.get_num_aligned()
-
-            endTemp = x.reference_pos+1
-
-        self.get_col_names()
-
-        if respType == "DataFrame":
-            result = toDataFrame(result, self.columns)
-
-        return result
+        return result, None

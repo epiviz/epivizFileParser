@@ -18,7 +18,8 @@ bb = SplicingBamFile("tests/data/test.bam")
 
 
 def test_getRange():
-    coverage, junctions = bb.getRange("chr10", 1, 100000000)
+    (coverage, junctions), error = bb.getRange("chr10", 1, 100000000)
+    assert(error == None)
 
     assert(len(bb.columns) == 6)
     assert(bb.columns == ["chr", "region1_start", "region2_start",
@@ -39,6 +40,7 @@ def test_input_error():
 
 
 def test_empty():
-    coverage, junctions = bb.getRange("chr10", 4, 7)
+    (coverage, junctions), error = bb.getRange("chr10", 4, 7)
+    assert(error == None)
     assert(len(coverage) == 0)
     assert(len(junctions) == 0)

@@ -35,7 +35,7 @@ class SplicingBamFile(BamFile):
                             "region1_end", "region2_end", "value"]
         return self.columns
 
-    def _getJunctions(self, chr, start, end):
+    def _get_junctions(self, chr, start, end):
         iter = self.file.fetch(chr, start, end)
 
         wiggle = numpy.zeros(end - start + 1)
@@ -117,15 +117,20 @@ class SplicingBamFile(BamFile):
         coverage = []
         junctions = []
 
-        # coverage columns
-        self.columns = ["chr", "start", "end", "value"]
-        coverage = super().getRange(chr, start, end)
-        self.columns = None
+        try:
+            # coverage columns
+            self.columns = None
+            self.columns = super().get_col_names()
+            coverage = super().getRange(chr, start, end)[0]
 
-        _junctions = self._getJunctions(chr, start, end)
-        self.get_col_names()
+            _junctions = self._get_junctions(chr, start, end)
 
-        if respType == "DataFrame":
-            junctions = toDataFrame(_junctions, self.columns)
+            self.columns = None
+            self.get_col_names()
 
-        return coverage, junctions
+            if respType == "DataFrame":
+                junctions = toDataFrame(_junctions, self.columns)
+        except Exception as e:
+            raise Exception(str(e))
+
+        return (coverage, junctions), None
