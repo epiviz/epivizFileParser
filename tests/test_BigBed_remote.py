@@ -14,24 +14,28 @@ __license__ = "mit"
     come from the pyBigWig library
 """
 
-bb = BigBed("https://obj.umiacs.umd.edu/bigwig-files/ENCFF330GHF.bigBed")
+pytestmark = pytest.mark.remote
+
+@pytest.fixture(scope='module')
+def bb(): 
+    return BigBed("https://obj.umiacs.umd.edu/bigwig-files/ENCFF330GHF.bigBed")
 
 
-def test_correct_format():
+def test_correct_format(bb):
     assert (bb.header['magic'] == 2273964779)
 
 
-def test_header():
+def test_header(bb):
     assert(bb.header == {'magic': 2273964779, 'version': 4, 'zoomLevels': 10, 'chromTreeOffset': 953, 'fullDataOffset': 1275,
            'fullIndexOffset': 142913985, 'fieldCount': 9, 'definedFieldCount': 9, 'autoSqlOffset': 304, 'totalSummaryOffset': 849, 'uncompressBufSize': 29537})
 
 
-def test_columns():
+def test_columns(bb):
     assert(len(bb.columns) == bb.header['fieldCount'])
     # assert(bb.columns == ['chr', 'start', 'end', 'name', 'score', 'strand', 'thickStart',7 'thickEnd', 'reserved'])
 
 
-def test_range():
+def test_range(bb):
     start = 10000000
     end = 10020000
     res, err = bb.getRange(chr="chr1", start=start, end=end)
@@ -40,12 +44,12 @@ def test_range():
         assert (row['start'] <= end or row['end'] >= start)
 
 
-def test_get_bytes():
+def test_get_bytes(bb):
     res = bb.get_bytes(1, 100)
     assert (len(res) == 100)
 
 
-def test_bin_rows():
+def test_bin_rows(bb):
     result, err = bb.getRange(
         chr="chr1", start=10000000, end=10010000, bins=2000, zoomlvl=-2)
     res, err = bb.bin_rows(data=result, chr="chr1",
@@ -53,7 +57,7 @@ def test_bin_rows():
     assert (err == None)
 
 
-def test_groupBy():
+def test_groupBy(bb):
     res, err = bb.getRange(chr="chr1", start=10007800,
                            end=10010200, bins=2000, zoomlvl=-2)
     print(res)

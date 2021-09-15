@@ -4,11 +4,16 @@ import pandas as pd
 import json
 import statistics
 from epivizFileParser import BigWig
-bb = BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
+
+pytestmark = pytest.mark.skip
+
+@pytest.fixture(scope='module')
+def bb():
+    return BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
 
 
 @pytest.mark.skip(reason="skip")
-def test_case_1():
+def test_case_1(bb):
     data = []
     data.append(['chr1', 1, 10, 5])
     data.append(['chr1', 10, 100, 9])
@@ -28,7 +33,7 @@ def test_case_1():
 
 
 @pytest.mark.skip(reason="skip")
-def test_case_2():
+def test_case_2(bb):
     data = []
     data.append(['chr1', 1, 10, 5])
     data.append(['chr1', 10, 100, 9])
@@ -49,7 +54,7 @@ def test_case_2():
 
 
 @pytest.mark.skip(reason="skip")
-def test_case_3():
+def test_case_3(bb):
     data = []
     data.append(['chr1', 1, 10, 5])
     result = bb.simplify_data(data=data, result_type="mean")
@@ -62,7 +67,7 @@ def test_case_3():
         result[0]['score'], 3) == 5.000
 
 
-def test_case_4():
+def test_case_4(bb):
     data = []
     data.append(['chr1', 1, 10, 5])
     data.append(['chr1', 11, 100, 9])
@@ -91,7 +96,7 @@ def test_case_4():
         result[3]['score'], 3) == 9.000
 
 
-def test_case_5():
+def test_case_5(bb):
     data = []
     data.append(['chr1', 1, 10, 5])
     data.append(['chr1', 10, 100, 9])

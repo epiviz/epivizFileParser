@@ -14,26 +14,30 @@ __license__ = "mit"
     come from the pyBigWig library
 """
 
-bb = BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
+pytestmark = pytest.mark.remote
+
+@pytest.fixture(scope='module')
+def bb():
+    return BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
 
 
-def test_correct_format():
+def test_correct_format(bb):
     assert (bb.header['magic'] == 2291137574)
 
 
-def test_header():
+def test_header(bb):
     assert(bb.header == {'magic': 2291137574, 'version': 4, 'zoomLevels': 10, 'chromTreeOffset': 344, 'fullDataOffset': 705,
            'fullIndexOffset': 582485344, 'fieldCount': 0, 'definedFieldCount': 0, 'autoSqlOffset': 0, 'totalSummaryOffset': 304, 'uncompressBufSize': 32768})
 
 
-def test_columns():
+def test_columns(bb):
     # bb.header[fieldCount]==0
     #assert(len(bb.columns) == bb.header['fieldCount'])
     assert(len(bb.columns) == 4)
     assert(bb.columns == ["chr", "start", "end", "score"])
 
 
-def test_range():
+def test_range(bb):
     start = 10000000
     end = 10020000
     res, err = bb.getRange(chr="chr1", start=start, end=end)
@@ -42,7 +46,7 @@ def test_range():
         assert (row['start'] <= end or row['end'] >= start)
 
 
-def test_zoom_out_of_range():
+def test_zoom_out_of_range(bb):
     bw_res_100, bw_err_100 = bb.getRange(
         chr="chr1", start=10000000, end=30000000, bins=2000, zoomlvl=100)
     bw_res__1, bw_err__1 = bb.getRange(
@@ -51,7 +55,7 @@ def test_zoom_out_of_range():
     assert (len(bw_res_100) == len(bw_res__1))
 
 
-def test_zoom_levels():
+def test_zoom_levels(bb):
     for l in range(-1, 10):
         if l == 0:
             continue
@@ -82,12 +86,12 @@ def test_zoom_levels():
             assert (len(res) == 1)
 
 
-def test_get_bytes():
+def test_get_bytes(bb):
     res = bb.get_bytes(1, 100)
     assert (len(res) == 100)
 
 
-def test_bin_rows():
+def test_bin_rows(bb):
     start = 5000000
     end = 10020000
     res, err = bb.getRange(chr="chr1", start=start, end=end)
