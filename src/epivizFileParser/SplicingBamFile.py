@@ -1,5 +1,5 @@
-import pysam
-import numpy
+# import pysam
+# import numpy
 from .BamFile import BamFile
 from .utils import toDataFrame
 
@@ -38,7 +38,6 @@ class SplicingBamFile(BamFile):
     def _get_junctions(self, chr, start, end):
         iter = self.file.fetch(chr, start, end)
 
-        wiggle = numpy.zeros(end - start + 1)
         junctions = {}
 
         for read in iter:
@@ -69,9 +68,6 @@ class SplicingBamFile(BamFile):
                 if value < start or value > end:
                     continue
 
-                wiggle_index = value - start
-                wiggle[wiggle_index] += 1./read.query_alignment_length
-
                 try:
                     # if there is a junction coming up
                     if aligned_positions[i+1] > value + 1:
@@ -93,7 +89,7 @@ class SplicingBamFile(BamFile):
         junction_list = []
         for key, value in junctions.items():
             _start, _end = key.split(":")
-            junction_list.append((chr, 0, _end, _start, 0, value))
+            junction_list.append((chr, _start-1, _end, _start, _end+1, value))
 
         return junction_list
 
