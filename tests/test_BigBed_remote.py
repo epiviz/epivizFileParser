@@ -16,8 +16,9 @@ __license__ = "mit"
 
 pytestmark = pytest.mark.remote
 
+
 @pytest.fixture(scope='module')
-def bb(): 
+def bb():
     return BigBed("https://obj.umiacs.umd.edu/bigwig-files/ENCFF330GHF.bigBed")
 
 

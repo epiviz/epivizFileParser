@@ -9,16 +9,21 @@ __author__ = "jkanche, elgaml"
 __copyright__ = "jkanche"
 __license__ = "mit"
 
-bb = GtfParsedFile(
-    "https://raw.github.com/epiviz/efs-genomes/master/hg38/genes.tsv.gz")
+pytestmark = pytest.mark.remote
 
 
-def test_columns():
+@pytest.fixture(scope='module')
+def bb():
+    return GtfParsedFile(
+        "https://raw.github.com/epiviz/efs-genomes/master/hg38/genes.tsv.gz")
+
+
+def test_columns(bb):
     assert (bb.columns == ['chr', 'start', 'end', 'width',
             'strand', 'geneid', 'exon_starts', 'exon_ends', 'gene'])
 
 
-def test_range():
+def test_range(bb):
     start = 11874
     end = 944574
     res, err = bb.getRange('chr1', start, end)
@@ -28,22 +33,22 @@ def test_range():
                 or (res['end'][i] >= start and res['end'][i] <= end))
 
 
-def test_search_gene_max_results_greater_than_actual():
+def test_search_gene_max_results_greater_than_actual(bb):
     sg = bb.search_gene('MIR6859-1', maxResults=10)
     assert (len(sg[0]) == 3)
 
 
-def test_search_gene_max_results_less_than_actual():
+def test_search_gene_max_results_less_than_actual(bb):
     sg = bb.search_gene('MIR6859-1', maxResults=2)
     assert (len(sg[0]) == 2)
 
 
-def test_search_gene_max_results_zero():
+def test_search_gene_max_results_zero(bb):
     sg = bb.search_gene('MIR6859-1', maxResults=0)
     assert (len(sg[0]) == 1)
 
 
-def test_search_existing_gene():
+def test_search_existing_gene(bb):
     sg = bb.search_gene('MIR6859-1')
     assert (len(sg[0]) == 3)
     assert (sg[0][0]['chr'] == 'chr1')
@@ -51,7 +56,7 @@ def test_search_existing_gene():
     assert (sg[0][2]['chr'] == 'chr16')
 
 
-def test_search_existing_gene_not_case_sensitive():
+def test_search_existing_gene_not_case_sensitive(bb):
     sg = bb.search_gene('miR6859-1')
     assert (len(sg[0]) == 3)
     assert (sg[0][0]['chr'] == 'chr1')
@@ -59,11 +64,11 @@ def test_search_existing_gene_not_case_sensitive():
     assert (sg[0][2]['chr'] == 'chr16')
 
 
-def test_search_no_gene():
+def test_search_no_gene(bb):
     sg = bb.search_gene('')
     assert (sg == None)
 
 
-def test_search_wrong_gene():
+def test_search_wrong_gene(bb):
     sg = bb.search_gene('ehugslskdjbfiuqe')
     assert (sg == ([], None))
