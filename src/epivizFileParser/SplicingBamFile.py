@@ -89,6 +89,8 @@ class SplicingBamFile(BamFile):
         junction_list = []
         for key, value in junctions.items():
             _start, _end = key.split(":")
+            _start = int(_start)
+            _end = int(_end)
             junction_list.append((chr, _start-1, _end, _start, _end+1, value))
 
         return junction_list
