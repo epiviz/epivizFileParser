@@ -43,13 +43,15 @@ def test_getRange():
 
 # same test as bam file (copy paste)
 def test_input_error():
-    with pytest.raises(Exception) as excinfo:
-        bb.getRange("chr11", 1, 100000000)
-    assert "Invalid input. (chr, start, end)" == str(excinfo.value)
+    (coverage, junctions), error = bb.getRange("chr11", 1, 100000000)
+    assert (coverage.empty)
+    assert (junctions.empty)
+    assert (error == "invalid contig `chr11`")
 
-    with pytest.raises(Exception) as excinfo:
-        bb.getRange("chr10", 7, 4)
-    assert "Invalid input. (chr, start, end)" == str(excinfo.value)
+    res, error = bb.getRange("chr10", 7, 4)
+    assert (coverage.empty)
+    assert (junctions.empty)
+    assert (error == "invalid coordinates: start (7) > stop (4)")
 
 
 def test_empty():

@@ -26,13 +26,13 @@ def test_getRange():
 
 
 def test_input_error():
-    with pytest.raises(Exception) as excinfo:
-        bb.getRange("chr11", 1, 100000000)
-    assert "Invalid input. (chr, start, end)" == str(excinfo.value)
+    res, error = bb.getRange("chr11", 1, 100000000)
+    assert(res.empty)
+    assert (error == "Invalid input. (chr, start, end)")
 
-    with pytest.raises(Exception) as excinfo:
-        bb.getRange("chr10", 7, 4)
-    assert "Invalid input. (chr, start, end)" == str(excinfo.value)
+    res, error = bb.getRange("chr10", 7, 4)
+    assert(res.empty)
+    assert (error == "Invalid input. (chr, start, end)")
 
 
 def test_empty():

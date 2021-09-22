@@ -98,8 +98,8 @@ class BamFile(SamFile):
                 result = toDataFrame(result, self.columns)
 
         except ValueError as e:
-            raise Exception("Invalid input. (chr, start, end)")
+            return toDataFrame(result, self.columns), "Invalid input. (chr, start, end)"
         except Exception as e:
-            raise Exception(str(e))
+            return toDataFrame(result, self.columns), str(e)
 
         return result, None
