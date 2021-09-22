@@ -129,7 +129,9 @@ class SplicingBamFile(BamFile):
             if respType == "DataFrame":
                 junctions = toDataFrame(_junctions, self.columns)
         except Exception as e:
+            self.columns = None
             coverage = toDataFrame(coverage, super().get_col_names())
+            self.columns = None
             junctions = toDataFrame(junctions, self.get_col_names())
             return (coverage, junctions), str(e)
 
