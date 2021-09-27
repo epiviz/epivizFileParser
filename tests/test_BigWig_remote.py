@@ -16,6 +16,7 @@ __license__ = "mit"
 
 pytestmark = pytest.mark.remote
 
+
 @pytest.fixture(scope='module')
 def bb():
     return BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
@@ -101,7 +102,7 @@ def test_bin_rows(bb):
 
 
 @pytest.mark.skip(reason="skip")
-def test_simplified_bin_rows():
+def test_simplified_bin_rows(bb):
     start = 5000000
     end = 10020000
 

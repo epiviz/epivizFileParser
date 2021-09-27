@@ -47,7 +47,7 @@ class BamFile(SamFile):
         """
         return toDataFrame(result, self.columns)
 
-    def get_col_names(self, result):
+    def get_col_names(self):
         """
         Columns of a bam file
         """
@@ -73,11 +73,11 @@ class BamFile(SamFile):
             error 
                 if there was any error during the process
         """
+        result = []
+
         try:
             iter = self.file.pileup(chr, start, end)
-            self.result = []
-            # (result, _) = get_range_helper(self.to_DF, self.get_bin, self.get_col_names, chr, start, end, iter, self.columns, respType)
-            result = []
+
             chrTemp = startTemp = endTemp = valueTemp = None
             for x in iter:
                 if valueTemp is None:
@@ -92,12 +92,14 @@ class BamFile(SamFile):
 
                 endTemp = x.reference_pos+1
 
-            self.get_col_names(result[0])
+            self.get_col_names()
 
             if respType == "DataFrame":
                 result = toDataFrame(result, self.columns)
-            return result, None
+
         except ValueError as e:
-            return None, "Didn't find chromId with the given name"
-        except IndexError as e:
-            return None, "No data in given range."
+            return toDataFrame(result, self.columns), "Invalid input. (chr, start, end)"
+        except Exception as e:
+            return toDataFrame(result, self.columns), str(e)
+
+        return result, None

@@ -7,6 +7,7 @@ from epivizFileParser import BigWig
 
 pytestmark = pytest.mark.skip
 
+
 @pytest.fixture(scope='module')
 def bb():
     return BigWig("https://obj.umiacs.umd.edu/bigwig-files/39031.bigwig")
