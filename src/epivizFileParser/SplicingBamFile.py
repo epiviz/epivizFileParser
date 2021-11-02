@@ -115,6 +115,14 @@ class SplicingBamFile(BamFile):
         coverage = []
         junctions = []
 
+        if "chr" in chr:
+            alternate_chr = chr.split('chr')[1]
+            index_statistics = self.file.get_index_statistics()
+
+            for record in index_statistics:
+                if record.contig == alternate_chr:
+                    chr = alternate_chr
+
         try:
             # coverage columns
             self.columns = None
