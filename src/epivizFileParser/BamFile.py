@@ -80,6 +80,13 @@ class BamFile(SamFile):
 
             chrTemp = startTemp = endTemp = valueTemp = None
             for x in iter:
+
+                if not x.reference_pos >= start or not x.reference_pos <= end:
+                        continue
+                
+                if x.reference_pos == end and valueTemp is not None:
+                    result.append((chrTemp, startTemp, end, valueTemp))
+
                 if valueTemp is None:
                     chrTemp = x.reference_name
                     startTemp = x.reference_pos
