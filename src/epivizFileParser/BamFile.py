@@ -82,10 +82,11 @@ class BamFile(SamFile):
             for x in iter:
 
                 if not x.reference_pos >= start or not x.reference_pos <= end:
-                        continue
+                    continue
                 
                 if x.reference_pos == end and valueTemp is not None:
                     result.append((chrTemp, startTemp, end, valueTemp))
+                    continue
 
                 if valueTemp is None:
                     chrTemp = x.reference_name
