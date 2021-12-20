@@ -76,29 +76,83 @@ class BamFile(SamFile):
         result = []
 
         try:
-            iter = self.file.pileup(chr, start, end)
+            iter = self.file.pileup(
+                chr,
+                start,
+                end,
+                truncate=True,
+                stepper='nofilter',
+                min_base_quality=0,
+            )
 
-            chrTemp = startTemp = endTemp = valueTemp = None
+            chrTemp = valueTemp = None
+            startTemp = endTemp = start
+
             for x in iter:
+                # get data
+                _current_reference_name = x.reference_name
+                _current_reference_pos = x.reference_pos
+                _current_valueTemp = x.get_num_aligned()  # or x.nsegments
 
-                if not x.reference_pos >= start or not x.reference_pos <= end:
-                    continue
-                
-                if x.reference_pos == end and valueTemp is not None:
-                    result.append((chrTemp, startTemp, end, valueTemp))
-                    continue
+                # print(x.pileups[0])
 
+                for pileupread in x.pileups:
+                    # or look at x.get_query_sequences()
+                    _current_valueTemp -= pileupread.is_del
+
+                print(
+                    f"{_current_reference_pos} : {_current_valueTemp} : {x.get_query_sequences()}")
+
+                # is first?
                 if valueTemp is None:
-                    chrTemp = x.reference_name
-                    startTemp = x.reference_pos
-                    valueTemp = x.get_num_aligned()
-                elif valueTemp is not x.get_num_aligned():
-                    result.append((chrTemp, startTemp, endTemp, valueTemp))
-                    chrTemp = x.reference_name
-                    startTemp = x.reference_pos
-                    valueTemp = x.get_num_aligned()
+                    chrTemp = _current_reference_name
+                    startTemp = _current_reference_pos
+                    valueTemp = _current_valueTemp
 
-                endTemp = x.reference_pos+1
+                    endTemp = _current_reference_pos + 1
+                    continue
+
+                # is it at the end? did it finish before end?
+                if x.reference_pos == end-1 and valueTemp is not None:
+                    # last min change
+                    if valueTemp is not _current_valueTemp:
+                        result.append((chrTemp, startTemp, endTemp, valueTemp))
+                        chrTemp = _current_reference_name
+                        startTemp = _current_reference_pos
+                        valueTemp = _current_valueTemp
+
+                    result.append((chrTemp, startTemp, end, valueTemp))
+
+                    continue
+
+                # gap detection
+                if _current_reference_pos != endTemp:
+                    print('caught gap')
+                    # print(f"{_current_reference_pos} : {endTemp}")
+                    result.append((chrTemp, startTemp, endTemp, valueTemp))
+                    chrTemp = _current_reference_name
+                    startTemp = _current_reference_pos
+                    valueTemp = _current_valueTemp
+
+                    endTemp = _current_reference_pos + 1
+                    continue
+
+                # change of coverage value
+                if valueTemp is not _current_valueTemp:
+                    result.append((chrTemp, startTemp, endTemp, valueTemp))
+                    chrTemp = _current_reference_name
+                    startTemp = _current_reference_pos
+                    valueTemp = _current_valueTemp
+
+                    endTemp = _current_reference_pos + 1
+                    continue
+
+                # no change
+                endTemp = _current_reference_pos + 1
+
+            # last insertion check
+            if len(result) == 0 or startTemp != result[len(result) - 1][1]:
+                result.append((chrTemp, startTemp, endTemp, valueTemp))
 
             self.get_col_names()
 
