@@ -36,11 +36,32 @@ class SplicingBamFile(BamFile):
         return self.columns
 
     def _get_junctions(self, chr, start, end):
-        iter = self.file.fetch(chr, start, end)
+        # iter = self.file.fetch(chr, start, end)
+        iter = self.file.pileup(
+            chr,
+            start,
+            end,
+            truncate=True,
+        )
+
+        reads_set = set()
+        reads_refs = []
+
+        for pileupcolumn in iter:
+            for pileupread in pileupcolumn.pileups:
+                _name = pileupread.alignment.query_name
+
+                if _name in reads_set:
+                    pass
+                else:
+                    reads_set.add(_name)
+                    reads_refs.append(pileupread.alignment)
 
         junctions = {}
 
-        for read in iter:
+        for read in reads_refs:
+            # print(read.query_name)
+
             if read.cigartuples is None:
                 # Skipping read with no CIGAR string
                 continue

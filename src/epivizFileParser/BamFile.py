@@ -81,8 +81,6 @@ class BamFile(SamFile):
                 start,
                 end,
                 truncate=True,
-                stepper='nofilter',
-                min_base_quality=0,
             )
 
             chrTemp = valueTemp = None
@@ -100,8 +98,8 @@ class BamFile(SamFile):
                     # or look at x.get_query_sequences()
                     _current_valueTemp -= pileupread.is_del
 
-                print(
-                    f"{_current_reference_pos} : {_current_valueTemp} : {x.get_query_sequences()}")
+                # print(
+                #     f"{_current_reference_pos} : {_current_valueTemp} : {x.get_query_sequences()}")
 
                 # is first?
                 if valueTemp is None:
@@ -127,7 +125,7 @@ class BamFile(SamFile):
 
                 # gap detection
                 if _current_reference_pos != endTemp:
-                    print('caught gap')
+                    # print('caught gap')
                     # print(f"{_current_reference_pos} : {endTemp}")
                     result.append((chrTemp, startTemp, endTemp, valueTemp))
                     chrTemp = _current_reference_name
@@ -152,7 +150,8 @@ class BamFile(SamFile):
 
             # last insertion check
             if len(result) == 0 or startTemp != result[len(result) - 1][1]:
-                result.append((chrTemp, startTemp, endTemp, valueTemp))
+                if valueTemp is not None:
+                    result.append((chrTemp, startTemp, endTemp, valueTemp))
 
             self.get_col_names()
 
