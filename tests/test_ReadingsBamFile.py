@@ -44,8 +44,3 @@ def test_input_error():
 
 def test_empty():
     assert(len(bb.getRange("chr10", 4, 7)[0]) == 0)
-
-
-test_getRange()
-test_input_error()
-test_empty()
