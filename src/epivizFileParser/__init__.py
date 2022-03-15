@@ -29,3 +29,4 @@ from .TbxFile import TbxFile
 from .GtfFile import GtfFile
 from .InteractionBigBed import InteractionBigBed
 from .TileDB import TileDB
+from .sceTileDB import sceTileDB
