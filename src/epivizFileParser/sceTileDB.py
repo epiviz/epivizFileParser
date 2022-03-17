@@ -13,11 +13,14 @@ class sceTileDB:
     """
     TileDB Class to parse single-cell folders.
     Args:
-        path (str): local full path to an experiment inside a dataset.
+        path (str): local full path to directory for an experiment inside a dataset.
             ex: tests/data/single-cell/GEPIVIZ_DS000010065/part_1
     Detail:
-        The tiledb_folder should contain:
-        TO DO
+        The experiment directory should contain:
+            - cols.tsv
+            - rows.tsv
+            - <dimension>.tsv ex: tSNE.stv
+            - data.tiledb
     """
 
     def __init__(self, path):
