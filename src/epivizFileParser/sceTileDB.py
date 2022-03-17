@@ -14,7 +14,7 @@ class sceTileDB:
     TileDB Class to parse single-cell folders.
     Args:
         path (str): local full path to directory for an experiment inside a dataset.
-            ex: tests/data/single-cell/GEPIVIZ_DS000010065/part_1
+            ex: tests/data/<dataset_id>/<experiment_id>
     Detail:
         The experiment directory should contain:
             - cols.tsv
