@@ -1,4 +1,5 @@
 import pandas
+from scipy import sparse
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "jkanche"
@@ -42,7 +43,7 @@ def create_parser_object(format, source, columns=None):
         "gwas_pip": GWASBigBedPIP,
         "tiledb": TileDB,
         "interaction_bigbed": InteractionBigBed,
-        "transcript": TranscriptTbxFile
+        "transcript": TranscriptTbxFile,
     }
 
     return req_manager[format.lower()](source, columns)
@@ -51,3 +52,15 @@ def create_parser_object(format, source, columns=None):
 def toDataFrame(records, header=None):
     input = pandas.DataFrame(records, columns=header)
     return input
+
+
+def dense_to_sparse(numpy_array, genes):
+    csr = sparse.csr_matrix(numpy_array)
+
+    result = {
+        "indices": csr.indices.tolist(),
+        "indptr": csr.indptr.tolist(),
+        "data": csr.data.tolist(),
+    }
+
+    return result
