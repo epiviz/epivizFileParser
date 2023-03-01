@@ -16,6 +16,9 @@ def create_parser_object(format, source, columns=None):
     Returns:
         An instance of parser class
     """
+    """
+
+    """  
 
     from .BigBed import BigBed
     from .BigWig import BigWig
@@ -28,11 +31,17 @@ def create_parser_object(format, source, columns=None):
     from .InteractionBigBed import InteractionBigBed
     from .TileDB import TileDB
     from .TranscriptTbxFile import TranscriptTbxFile
+    from .GuideTbxFile import GuideTbxFile
+    from .GuideBigBed import GuideBigBed
 
     req_manager = {
+        "BigWig": BigWig,
         "bigwig": BigWig,
+        "bigWig": BigWig,
         "bw": BigWig,
+        "BigBed": BigBed,
         "bigbed": BigBed,
+        "bigBed": BigBed,
         "bb": BigBed,
         "sam": SamFile,
         "bam": BamFile,
@@ -44,14 +53,18 @@ def create_parser_object(format, source, columns=None):
         "tiledb": TileDB,
         "interaction_bigbed": InteractionBigBed,
         "transcript": TranscriptTbxFile,
+        "guide_tbx": GuideTbxFile,
+        "guide": GuideBigBed,
     }
+    
+    return req_manager[format](source, columns)
 
-    return req_manager[format.lower()](source, columns)
-
-
-def toDataFrame(records, header=None):
+def toDataFrame(records, header = None):
     input = pandas.DataFrame(records, columns=header)
     return input
+
+# def toMsgpack(msg):
+#     return umsgpack.packb(msg)
 
 
 def dense_to_sparse(numpy_array, genes):
